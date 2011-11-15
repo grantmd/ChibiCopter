@@ -177,7 +177,7 @@
  * @note    Requires @p CH_USE_SEMAPHORES.
  */
 #if !defined(CH_USE_SEMSW) || defined(__DOXYGEN__)
-#define CH_USE_SEMSW                    FALSE
+#define CH_USE_SEMSW                    TRUE
 #endif
 
 /**
@@ -187,7 +187,7 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_USE_MUTEXES) || defined(__DOXYGEN__)
-#define CH_USE_MUTEXES                  FALSE
+#define CH_USE_MUTEXES                  TRUE
 #endif
 
 /**

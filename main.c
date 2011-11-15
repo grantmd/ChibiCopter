@@ -8,6 +8,19 @@
 #include "ch.h"
 #include "hal.h"
 
+#include "accel.h"
+
+/* I2C1 config */
+static const I2CConfig i2cfg1 = {
+    OPMODE_I2C,
+    100000, // clock speed
+    STD_DUTY_CYCLE,
+    0,
+    0,
+    0,
+    0,
+};
+
 /*
  * This is a periodic thread that blinks led 5
  */
@@ -48,6 +61,11 @@ int main(void) {
   chSysInit();
 
   /*
+   * Init the I2C subsystem
+   */
+  i2cStart(&I2CD1, &i2cfg1);
+
+  /*
    * Activates the serial driver 1 using the driver default configuration.
    * PA2(TX) and PA3(RX) are routed to USART1.
    */
@@ -59,6 +77,11 @@ int main(void) {
    * Creates the example thread.
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
+
+  /*
+   * Setup the accelerometer.
+   */
+  accel_init();
 
   /*
    * Normal main() thread activity
