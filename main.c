@@ -20,7 +20,15 @@ static msg_t Thread1(void *arg) {
     palSetPad(GPIOD, GPIOD_LED5);
     chThdSleepMilliseconds(500);
     palClearPad(GPIOD, GPIOD_LED5);
+    palSetPad(GPIOD, GPIOD_LED6);
     chThdSleepMilliseconds(500);
+    palClearPad(GPIOD, GPIOD_LED6);
+    palSetPad(GPIOD, GPIOD_LED4);
+    chThdSleepMilliseconds(500);
+    palClearPad(GPIOD, GPIOD_LED4);
+    palSetPad(GPIOD, GPIOD_LED3);
+    chThdSleepMilliseconds(500);
+    palClearPad(GPIOD, GPIOD_LED3);
   }
 }
 
