@@ -22,7 +22,7 @@ static const I2CConfig i2cfg1 = {
 };
 
 /*
- * This is a periodic thread that blinks led 5
+ * This is a periodic thread that blinks some leds
  */
 static WORKING_AREA(waThread1, 128);
 static msg_t Thread1(void *arg) {
@@ -74,7 +74,7 @@ int main(void) {
   palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
 
   /*
-   * Creates the example thread.
+   * Creates the blink thread.
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
@@ -88,5 +88,6 @@ int main(void) {
    */
   while (TRUE) {
     chThdSleepMilliseconds(500);
+    //accel_read();
   }
 }

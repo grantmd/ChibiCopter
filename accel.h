@@ -45,6 +45,13 @@ static const I2CSlaveConfig accel = {
 	accel_error_cb,
 };
 
+struct accel_data {
+	int x;
+	int y;
+	int z;
+};
+
 void accel_init(void);
+void accel_read(void);
 
 #endif /* ACCEL_H_ */
