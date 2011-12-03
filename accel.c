@@ -1,3 +1,12 @@
+/*
+    ChibiCopter - https://github.com/grantmd/ChibiCopter
+    A quadcopter platform running under ChibiOS/RT.
+
+    On-board accelerometer config
+*/
+
+#include <stdlib.h>
+
 #include "ch.h"
 #include "hal.h"
 
@@ -16,7 +25,9 @@ void accel_init(void){
 	accel_tx_data[3] = 0b00000000;
 
 	/* sending */
+  i2cAcquireBus(&I2CD1);
 	i2cMasterTransmit(&I2CD1, &accel, accel_addr, accel_tx_data, 4, accel_rx_data, 0);
+  i2cReleaseBus(&I2CD1);
 }
 
 void accel_read(void){
