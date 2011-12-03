@@ -10,8 +10,6 @@
 
 #include "serial_help.h"
 
-static BaseChannel *chp;
-
 /**
  * @brief   Prints a decimal unsigned number.
  *

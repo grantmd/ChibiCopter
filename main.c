@@ -49,6 +49,8 @@ static msg_t Thread1(void *arg) {
   return 0;
 }
 
+BaseChannel *chp; // serial port
+
 /*
  * Application entry point.
  */
@@ -65,6 +67,18 @@ int main(void) {
   chSysInit();
 
   /*
+   * Activates the serial driver 2 using the driver default configuration.
+   * PA2(TX) and PA3(RX) are routed to USART2.
+   */
+
+   // FIXME: USART2 instead?
+  sdStart(&SD2, NULL);
+  chp = &SD2;
+  palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
+  palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
+  serial_println("Hello, startup!");
+
+  /*
    * Init the I2C subsystem
    */
   i2cInit();
@@ -73,17 +87,6 @@ int main(void) {
   /* tune ports for I2C1*/
   //palSetPadMode(IOPORT2, 6, PAL_MODE_STM32_ALTERNATE_OPENDRAIN);
   //palSetPadMode(IOPORT2, 7, PAL_MODE_STM32_ALTERNATE_OPENDRAIN);
-
-  /*
-   * Activates the serial driver 2 using the driver default configuration.
-   * PA2(TX) and PA3(RX) are routed to USART2.
-   */
-
-   // FIXME: USART2 instead?
-  sdStart(&SD2, NULL);
-  palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
-  palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
-  serial_println("Hello, startup!");
 
   /*
    * Creates the blink thread.
