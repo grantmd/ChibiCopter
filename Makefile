@@ -77,8 +77,9 @@ CSRC = $(PORTSRC) \
        $(BOARDSRC) \
        $(CHIBIOS)/os/various/evtimer.c \
        $(CHIBIOS)/os/various/syscalls.c \
-       accel.c \
-       main.c
+       main.c \
+       serial_help.c \
+       accel.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
