@@ -5,6 +5,7 @@
     On-board accelerometer config
 */
 
+#include <stdlib.h>
 #include "ch.h"
 
 #ifndef ACCEL_H_
