@@ -19,7 +19,7 @@
 */
 
 /*
- * STM32L1xx drivers configuration.
+ * STM32F4xx drivers configuration.
  * The following settings override the default settings present in
  * the various device driver implementation headers.
  * Note that the settings for each driver only have effect if the whole
@@ -64,9 +64,20 @@
 /*
  * ADC driver system settings.
  */
+#define STM32_ADC_ADCPRE                    ADC_CCR_ADCPRE_DIV2
 #define STM32_ADC_USE_ADC1                  TRUE
+#define STM32_ADC_USE_ADC2                  TRUE
+#define STM32_ADC_USE_ADC3                  TRUE
+#define STM32_ADC_ADC1_DMA_STREAM           STM32_DMA_STREAM_ID(2, 4)
+#define STM32_ADC_ADC2_DMA_STREAM           STM32_DMA_STREAM_ID(2, 2)
+#define STM32_ADC_ADC3_DMA_STREAM           STM32_DMA_STREAM_ID(2, 1)
 #define STM32_ADC_ADC1_DMA_PRIORITY         2
-#define STM32_ADC_ADC1_IRQ_PRIORITY         5
+#define STM32_ADC_ADC2_DMA_PRIORITY         2
+#define STM32_ADC_ADC3_DMA_PRIORITY         2
+#define STM32_ADC_IRQ_PRIORITY              5
+#define STM32_ADC_ADC1_DMA_IRQ_PRIORITY     5
+#define STM32_ADC_ADC2_DMA_IRQ_PRIORITY     5
+#define STM32_ADC_ADC3_DMA_IRQ_PRIORITY     5
 
 /*
  * CAN driver system settings.
@@ -147,7 +158,6 @@
 #define STM32_SERIAL_USE_UART4              FALSE
 #define STM32_SERIAL_USE_UART5              FALSE
 #define STM32_SERIAL_USE_USART6             FALSE
-#define STM32_SERIAL_USE_USART6             FALSE
 #define STM32_SERIAL_USART1_PRIORITY        12
 #define STM32_SERIAL_USART2_PRIORITY        12
 #define STM32_SERIAL_USART3_PRIORITY        12
@@ -161,6 +171,12 @@
 #define STM32_SPI_USE_SPI1                  FALSE
 #define STM32_SPI_USE_SPI2                  TRUE
 #define STM32_SPI_USE_SPI3                  FALSE
+#define STM32_SPI_SPI1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(2, 0)
+#define STM32_SPI_SPI1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(2, 3)
+#define STM32_SPI_SPI2_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 3)
+#define STM32_SPI_SPI2_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 4)
+#define STM32_SPI_SPI3_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 0)
+#define STM32_SPI_SPI3_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 7)
 #define STM32_SPI_SPI1_DMA_PRIORITY         1
 #define STM32_SPI_SPI2_DMA_PRIORITY         1
 #define STM32_SPI_SPI3_DMA_PRIORITY         1
@@ -175,6 +191,12 @@
 #define STM32_UART_USE_USART1               FALSE
 #define STM32_UART_USE_USART2               TRUE
 #define STM32_UART_USE_USART3               FALSE
+#define STM32_UART_USART1_RX_DMA_STREAM     STM32_DMA_STREAM_ID(2, 5)
+#define STM32_UART_USART1_TX_DMA_STREAM     STM32_DMA_STREAM_ID(2, 7)
+#define STM32_UART_USART2_RX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 5)
+#define STM32_UART_USART2_TX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 6)
+#define STM32_UART_USART3_RX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 1)
+#define STM32_UART_USART3_TX_DMA_STREAM     STM32_DMA_STREAM_ID(1, 3)
 #define STM32_UART_USART1_IRQ_PRIORITY      12
 #define STM32_UART_USART2_IRQ_PRIORITY      12
 #define STM32_UART_USART3_IRQ_PRIORITY      12
@@ -184,9 +206,19 @@
 #define STM32_UART_DMA_ERROR_HOOK(uartp)    chSysHalt()
 
 /*
- * USB driver system settings.
+ * I2C driver system settings.
  */
-#define STM32_USB_USE_USB1                  TRUE
-#define STM32_USB_LOW_POWER_ON_SUSPEND      FALSE
-#define STM32_USB_USB1_HP_IRQ_PRIORITY      6
-#define STM32_USB_USB1_LP_IRQ_PRIORITY      14
+#define STM32_I2C_USE_I2C1                  TRUE
+#define STM32_I2C_USE_I2C2                  TRUE
+#define STM32_I2C_I2C1_IRQ_PRIORITY         10
+#define STM32_I2C_I2C2_IRQ_PRIORITY         10
+#define STM32_I2C_I2C1_DMA_PRIORITY         4
+#define STM32_I2C_I2C2_DMA_PRIORITY         4
+#define STM32_I2C_I2C1_DMA_ERROR_HOOK()     chSysHalt()
+#define STM32_I2C_I2C2_DMA_ERROR_HOOK()     chSysHalt()
+/* I2C1 */
+#define STM32_I2C_I2C1_USE_GPT_TIM          GPTD1
+#define STM32_I2C_I2C1_USE_POLLING_WAIT     TRUE
+/* I2C2 */
+#define STM32_I2C_I2C2_USE_GPT_TIM          GPTD2
+#define STM32_I2C_I2C2_USE_POLLING_WAIT     TRUE
