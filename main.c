@@ -5,9 +5,12 @@
     Based on demo code from ChibiOS/RT
 */
 
+#include <stdlib.h>
+
 #include "ch.h"
 #include "hal.h"
 
+#include "serial_help.h"
 #include "accel.h"
 
 /* I2C1 config */
@@ -43,6 +46,7 @@ static msg_t Thread1(void *arg) {
     chThdSleepMilliseconds(500);
     palClearPad(GPIOD, GPIOD_LED3);
   }
+  return 0;
 }
 
 /*
@@ -63,15 +67,23 @@ int main(void) {
   /*
    * Init the I2C subsystem
    */
+  i2cInit();
   i2cStart(&I2CD1, &i2cfg1);
 
+  /* tune ports for I2C1*/
+  //palSetPadMode(IOPORT2, 6, PAL_MODE_STM32_ALTERNATE_OPENDRAIN);
+  //palSetPadMode(IOPORT2, 7, PAL_MODE_STM32_ALTERNATE_OPENDRAIN);
+
   /*
-   * Activates the serial driver 1 using the driver default configuration.
-   * PA2(TX) and PA3(RX) are routed to USART1.
+   * Activates the serial driver 2 using the driver default configuration.
+   * PA2(TX) and PA3(RX) are routed to USART2.
    */
+
+   // FIXME: USART2 instead?
   sdStart(&SD2, NULL);
   palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
   palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
+  serial_println("Hello, startup!");
 
   /*
    * Creates the blink thread.
@@ -81,7 +93,9 @@ int main(void) {
   /*
    * Setup the accelerometer.
    */
+  serial_print("Activating Accelerometer...");
   accel_init();
+  serial_println("OK");
 
   /*
    * Normal main() thread activity
