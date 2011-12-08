@@ -105,6 +105,6 @@ int main(void) {
    */
   while (TRUE) {
     chThdSleepMilliseconds(500);
-    //accel_read();
+    accel_read();
   }
 }
