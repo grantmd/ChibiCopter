@@ -67,7 +67,6 @@ int main(void) {
    * PA2(TX) and PA3(RX) are routed to USART2.
    */
 
-   // FIXME: USART2 instead?
   sdStart(&SD2, NULL);
   chp = &SD2;
   palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
