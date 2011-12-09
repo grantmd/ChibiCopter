@@ -25,8 +25,8 @@ static const I2CConfig i2cfg1 = {
 /*
  * This is a periodic thread that blinks some leds
  */
-static WORKING_AREA(waThread1, 128);
-static msg_t Thread1(void *arg) {
+static WORKING_AREA(BlinkWA, 128);
+static msg_t Blink(void *arg) {
 
   (void)arg;
   chRegSetThreadName("blinker");
@@ -43,6 +43,21 @@ static msg_t Thread1(void *arg) {
     palSetPad(GPIOD, GPIOD_LED3);
     chThdSleepMilliseconds(500);
     palClearPad(GPIOD, GPIOD_LED3);
+  }
+  return 0;
+}
+
+/*
+ * Reads accel data off the i2c bus
+ */
+static WORKING_AREA(AccelWA, 128);
+static msg_t AccelPoll(void *arg) {
+
+  (void)arg;
+  chRegSetThreadName("accel");
+  while (TRUE) {
+    chThdSleepMilliseconds(32);
+    accel_read();
   }
   return 0;
 }
@@ -80,9 +95,10 @@ int main(void) {
   i2cStart(&I2CD1, &i2cfg1);
 
   /*
-   * Creates the blink thread.
+   * Creates the threads
    */
-  chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
+  chThdCreateStatic(BlinkWA, sizeof(BlinkWA), NORMALPRIO, Blink, NULL);
+  chThdCreateStatic(AccelWA, sizeof(AccelWA), NORMALPRIO, AccelPoll, NULL);
 
   /*
    * Setup the accelerometer.
@@ -96,6 +112,5 @@ int main(void) {
    */
   while (TRUE) {
     chThdSleepMilliseconds(500);
-    accel_read();
   }
 }
