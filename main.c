@@ -13,15 +13,13 @@
 #include "serial_help.h"
 #include "accel.h"
 
+BaseChannel *chp; // serial port
+
 /* I2C1 config */
 static const I2CConfig i2cfg1 = {
     OPMODE_I2C,
-    100000, // clock speed
-    STD_DUTY_CYCLE,
-    0,
-    0,
-    0,
-    0,
+    400000, // clock speed
+    FAST_DUTY_CYCLE_16_9,
 };
 
 /*
@@ -48,8 +46,6 @@ static msg_t Thread1(void *arg) {
   }
   return 0;
 }
-
-BaseChannel *chp; // serial port
 
 /*
  * Application entry point.
@@ -83,10 +79,6 @@ int main(void) {
    */
   i2cInit();
   i2cStart(&I2CD1, &i2cfg1);
-
-  /* tune ports for I2C1*/
-  //palSetPadMode(IOPORT2, 6, PAL_MODE_STM32_ALTERNATE_OPENDRAIN);
-  //palSetPadMode(IOPORT2, 7, PAL_MODE_STM32_ALTERNATE_OPENDRAIN);
 
   /*
    * Creates the blink thread.
