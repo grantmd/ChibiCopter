@@ -112,5 +112,16 @@ int main(void) {
    */
   while (TRUE) {
     chThdSleepMilliseconds(500);
+    serial_print("Accel x:");
+    serial_printn(get_accel_x());
+    serial_println("");
+
+    serial_print("Accel y:");
+    serial_printn(get_accel_y());
+    serial_println("");
+
+    serial_print("Accel z:");
+    serial_printn(get_accel_z());
+    serial_println("");
   }
 }

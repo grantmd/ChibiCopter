@@ -35,4 +35,8 @@ struct accel_data {
 int accel_init(void);
 void accel_read(void);
 
+int16_t get_accel_x(void);
+int16_t get_accel_y(void);
+int16_t get_accel_z(void);
+
 #endif /* ACCEL_H_ */

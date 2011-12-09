@@ -42,3 +42,15 @@ void accel_read(void){
   data.y = accel_rx_data[2] + (accel_rx_data[3] << 8);
   data.z = accel_rx_data[4] + (accel_rx_data[5] << 8);
 }
+
+int16_t get_accel_x(void){
+  return data.x;
+}
+
+int16_t get_accel_y(void){
+  return data.y;
+}
+
+int16_t get_accel_z(void){
+  return data.z;
+}
