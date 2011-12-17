@@ -195,13 +195,6 @@
 #define I2C_USE_MUTUAL_EXCLUSION    TRUE
 #endif
 
-/**
- * @brief   Enables I2C callbacks
- */
-#if !defined(I2C_SUPPORTS_CALLBACKS) || defined(__DOXYGEN__)
-#define I2C_SUPPORTS_CALLBACKS    TRUE
-#endif
-
 /*===========================================================================*/
 /* MAC driver related settings.                                              */
 /*===========================================================================*/
