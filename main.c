@@ -11,7 +11,7 @@
 #include "hal.h"
 
 #include "serial_help.h"
-#include "accel.h"
+#include "LIS302DL.h"
 
 BaseChannel *chp; // serial port
 
@@ -50,14 +50,14 @@ static msg_t Blink(void *arg) {
 /*
  * Reads accel data off the i2c bus
  */
-static WORKING_AREA(AccelWA, 128);
-static msg_t AccelPoll(void *arg) {
+static WORKING_AREA(LIS302DLWA, 128);
+static msg_t LIS302DLPoll(void *arg) {
 
   (void)arg;
-  chRegSetThreadName("accel");
+  chRegSetThreadName("LIS302DL");
   while (TRUE) {
     chThdSleepMilliseconds(32);
-    accel_read();
+    LIS302DL_read();
   }
   return 0;
 }
@@ -98,13 +98,13 @@ int main(void) {
    * Creates the threads
    */
   chThdCreateStatic(BlinkWA, sizeof(BlinkWA), NORMALPRIO, Blink, NULL);
-  chThdCreateStatic(AccelWA, sizeof(AccelWA), NORMALPRIO, AccelPoll, NULL);
+  chThdCreateStatic(LIS302DLWA, sizeof(LIS302DLWA), NORMALPRIO, LIS302DLPoll, NULL);
 
   /*
    * Setup the accelerometer.
    */
   serial_print("Activating Accelerometer...");
-  accel_init();
+  LIS302DL_init();
   serial_println("OK");
 
   /*
@@ -113,15 +113,15 @@ int main(void) {
   while (TRUE) {
     chThdSleepMilliseconds(500);
     serial_print("Accel x:");
-    serial_printn(get_accel_x());
+    serial_printn(get_LIS302DL_x());
     serial_println("");
 
     serial_print("Accel y:");
-    serial_printn(get_accel_y());
+    serial_printn(get_LIS302DL_y());
     serial_println("");
 
     serial_print("Accel z:");
-    serial_printn(get_accel_z());
+    serial_printn(get_LIS302DL_z());
     serial_println("");
   }
 }
