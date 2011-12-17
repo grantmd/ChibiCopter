@@ -13,6 +13,10 @@
 
 #define sound_addr 0x94
 
+/* autoincrement bit position. This bit needs to perform reading of
+ * multiple bytes at one request */
+#define AUTO_INCREMENT_BIT (1<<7)
+
 /* slave specific addresses */
 #define SOUND_STATUS_REG  0x27
 #define SOUND_CTRL_REG1   0x20
