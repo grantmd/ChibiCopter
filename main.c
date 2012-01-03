@@ -23,6 +23,16 @@ static const I2CConfig i2cfg1 = {
 };
 
 /*
+ * SPI configuration (21MHz(???), CPHA=0, CPOL=0, MSb first).
+ */
+static const SPIConfig spicfg = {
+  NULL,
+  GPIOA,
+  4,
+  SPI_CR1_BR_1
+};
+
+/*
  * This is a periodic thread that blinks some leds
  */
 static WORKING_AREA(BlinkWA, 128);
@@ -48,7 +58,7 @@ static msg_t Blink(void *arg) {
 }
 
 /*
- * Reads accel data off the i2c bus
+ * Reads accel data off the spi bus
  */
 static WORKING_AREA(LIS302DLWA, 128);
 static msg_t LIS302DLPoll(void *arg) {
@@ -91,20 +101,42 @@ int main(void) {
   /*
    * Init the I2C subsystem
    */
+  serial_println("Configurating I/O:");
+  serial_print("I2C...");
   i2cInit();
   i2cStart(&I2CD1, &i2cfg1);
+  serial_println("OK");
 
   /*
-   * Creates the threads
+   * SPI1 I/O pins setup.
    */
-  chThdCreateStatic(BlinkWA, sizeof(BlinkWA), NORMALPRIO, Blink, NULL);
-  chThdCreateStatic(LIS302DLWA, sizeof(LIS302DLWA), NORMALPRIO, LIS302DLPoll, NULL);
+  serial_print("SPI...");
+  palSetPadMode(GPIOA, 5, PAL_MODE_ALTERNATE(5) |
+                           PAL_STM32_OSPEED_HIGHEST);       /* New SCK.     */
+  palSetPadMode(GPIOA, 6, PAL_MODE_ALTERNATE(5) |
+                           PAL_STM32_OSPEED_HIGHEST);       /* New MISO.    */
+  palSetPadMode(GPIOA, 7, PAL_MODE_ALTERNATE(5) |
+                           PAL_STM32_OSPEED_HIGHEST);       /* New MOSI.    */
+  palSetPadMode(GPIOA, 4, PAL_MODE_OUTPUT_PUSHPULL |
+                           PAL_STM32_OSPEED_HIGHEST);       /* New CS.      */
+  palSetPad(GPIOA, 4);
+  spiStart(&SPID1, &spicfg);
+  serial_println("OK");
+  serial_println("I/O configured.");
 
   /*
    * Setup the accelerometer.
    */
   serial_print("Activating Accelerometer...");
   LIS302DL_init();
+  serial_println("OK");
+
+  /*
+   * Creates the threads
+   */
+  serial_print("Launching threads...");
+  chThdCreateStatic(BlinkWA, sizeof(BlinkWA), NORMALPRIO, Blink, NULL);
+  chThdCreateStatic(LIS302DLWA, sizeof(LIS302DLWA), NORMALPRIO, LIS302DLPoll, NULL);
   serial_println("OK");
 
   /*

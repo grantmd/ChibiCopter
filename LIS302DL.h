@@ -2,7 +2,7 @@
     ChibiCopter - https://github.com/grantmd/ChibiCopter
     A quadcopter platform running under ChibiOS/RT.
 
-    On-board LIS302DLerometer config
+    On-board accelerometer (LIS302DL) config
 */
 
 #include <stdlib.h>
@@ -20,7 +20,9 @@
 /* slave specific addresses */
 #define LIS302DL_STATUS_REG  0x27
 #define LIS302DL_CTRL_REG1   0x20
-#define LIS302DL_OUT_DATA    0x28
+#define LIS302DL_OUT_DATA_X  0x29
+#define LIS302DL_OUT_DATA_Y  0x2B
+#define LIS302DL_OUT_DATA_Z  0x2D
 
 /* buffers depth */
 #define LIS302DL_RX_DEPTH 8
