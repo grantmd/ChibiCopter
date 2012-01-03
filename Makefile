@@ -78,6 +78,7 @@ CSRC = $(PORTSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(CHIBIOS)/os/various/lis302dl.c \
+       $(CHIBIOS)/os/various/chprintf.c \
        serial_help.c \
        main.c
 

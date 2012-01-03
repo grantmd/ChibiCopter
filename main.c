@@ -10,6 +10,7 @@
 #include "ch.h"
 #include "hal.h"
 #include "lis302dl.h"
+#include "chprintf.h"
 
 #include "serial_help.h"
 
@@ -114,16 +115,6 @@ int main(void) {
     y = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTY);
     z = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTZ);
 
-    serial_print("Accel x:");
-    serial_printn(x);
-    serial_println("");
-
-    serial_print("Accel y:");
-    serial_printn(y);
-    serial_println("");
-
-    serial_print("Accel z:");
-    serial_printn(z);
-    serial_println("");
+    chprintf(chp, "Accel: %d, %d, %d\r\n", x, y, z);
   }
 }
