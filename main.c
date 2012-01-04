@@ -71,16 +71,16 @@ static msg_t Blink(void *arg) {
   chRegSetThreadName("blinker");
   while (TRUE) {
     palSetPad(GPIOD, GPIOD_LED5);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
     palClearPad(GPIOD, GPIOD_LED5);
     palSetPad(GPIOD, GPIOD_LED6);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
     palClearPad(GPIOD, GPIOD_LED6);
     palSetPad(GPIOD, GPIOD_LED4);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
     palClearPad(GPIOD, GPIOD_LED4);
     palSetPad(GPIOD, GPIOD_LED3);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(100);
     palClearPad(GPIOD, GPIOD_LED3);
   }
   return 0;
