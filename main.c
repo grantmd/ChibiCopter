@@ -9,12 +9,44 @@
 
 #include "ch.h"
 #include "hal.h"
+
 #include "lis302dl.h"
 #include "chprintf.h"
+#include "shell.h"
 
 #include "serial_help.h"
 
 BaseChannel *chp; // serial port
+
+/*
+ * Shell config
+ */
+
+ static void cmd_accel(BaseChannel *chp, int argc, char *argv[]){
+  (void)argv;
+  if (argc > 0) {
+    chprintf(chp, "Usage: accel\r\n");
+    return;
+  }
+  int8_t x, y, z;
+
+  x = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTX);
+  y = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTY);
+  z = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTZ);
+
+  chprintf(chp, "Accel: %d, %d, %d\r\n", x, y, z);
+}
+
+
+static const ShellCommand commands[] = {
+  {"accel", cmd_accel},
+  {NULL, NULL}
+};
+
+static const ShellConfig shell_cfg1 = {
+  (BaseChannel *)&SD2,
+  commands
+};
 
 /*
  * SPI1 configuration structure.
@@ -103,18 +135,15 @@ int main(void) {
   chThdCreateStatic(BlinkWA, sizeof(BlinkWA), NORMALPRIO, Blink, NULL);
   serial_println("OK");
 
+  serial_print("Starting shell...");
+  shellInit();
+  static WORKING_AREA(waShell, 512);
+  shellCreateStatic(&shell_cfg1, waShell, sizeof(waShell), NORMALPRIO);
+
   /*
    * Normal main() thread activity
    */
   while (TRUE) {
     chThdSleepMilliseconds(500);
-
-    int8_t x, y, z;
-
-    x = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTX);
-    y = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTY);
-    z = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTZ);
-
-    chprintf(chp, "Accel: %d, %d, %d\r\n", x, y, z);
   }
 }
