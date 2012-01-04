@@ -88,6 +88,28 @@ static msg_t Blink(void *arg) {
 }
 
 /*
+ * GPS setup
+ */
+static const SerialConfig sd1cfg = {
+  57600,
+  0,
+  USART_CR2_STOP1_BITS | USART_CR2_LINEN,
+  0
+};
+
+static WORKING_AREA(GPSWA, 128);
+static msg_t GPS(void *arg) {
+
+  (void)arg;
+  chRegSetThreadName("GPS");
+  while (TRUE) {
+    uint8_t c = chIOGet((BaseChannel *)&SD1);
+    chIOPut(chp, c);
+  }
+  return 0;
+}
+
+/*
  * Application entry point.
  */
 int main(void) {
@@ -109,9 +131,20 @@ int main(void) {
 
   sdStart(&SD2, NULL);
   chp = &SD2;
-  palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
-  palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
+  palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7)); // yellow wire on the FTDI cable
+  palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7)); // orange wire on the FTDI cable
   serial_println("Hello, startup!");
+
+  /*
+   * Activates the serial driver 1 using the driver default configuration, but at 38400
+   * PA9(TX) and PA10(RX) are routed to USART1.
+   */
+
+  serial_print("GPS...");
+  sdStart(&SD1, &sd1cfg);
+  palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(7)); // not currently connected
+  palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(7)); // incoming data from the GPS
+  serial_println("OK");
 
   /*
    * SPI1 I/O pins setup.
@@ -134,6 +167,7 @@ int main(void) {
    */
   serial_print("Launching threads...");
   chThdCreateStatic(BlinkWA, sizeof(BlinkWA), NORMALPRIO, Blink, NULL);
+  chThdCreateStatic(GPSWA, sizeof(GPSWA), NORMALPRIO, GPS, NULL);
   serial_println("OK");
 
   serial_print("Starting shell...");
