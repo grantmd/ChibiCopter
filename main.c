@@ -37,7 +37,6 @@ BaseChannel *chp; // serial port
   chprintf(chp, "Accel: %d, %d, %d\r\n", x, y, z);
 }
 
-
 static const ShellCommand commands[] = {
   {"accel", cmd_accel},
   {NULL, NULL}
@@ -47,6 +46,8 @@ static const ShellConfig shell_cfg1 = {
   (BaseChannel *)&SD2,
   commands
 };
+
+static WORKING_AREA(waShell, 512);
 
 /*
  * SPI1 configuration structure.
@@ -137,7 +138,6 @@ int main(void) {
 
   serial_print("Starting shell...");
   shellInit();
-  static WORKING_AREA(waShell, 512);
   shellCreateStatic(&shell_cfg1, waShell, sizeof(waShell), NORMALPRIO);
 
   /*
