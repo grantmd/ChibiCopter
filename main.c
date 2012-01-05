@@ -192,6 +192,11 @@ int main(void) {
     unsigned long fix_age;
     TinyGPS_get_position(&lat, &lon, &fix_age);
 
-    chprintf(chp, "GPS: %d, %d, %d\r\n", lat, lon, fix_age);
+    chprintf(chp, "GPS location: %d, %d, %d\r\n", lat, lon, fix_age);
+
+    int year;
+    char month, day, hour, minute, second, hundredths;
+    TinyGPS_crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &fix_age);
+    chprintf(chp, "GPS date/time: %d/%d/%d, %d:%d:%d.%d, %d\r\n", year, month, day, hour, minute, second, fix_age);
   }
 }
