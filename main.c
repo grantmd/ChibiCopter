@@ -15,6 +15,7 @@
 #include "shell.h"
 
 #include "serial_help.h"
+#include "TinyGPS.h"
 
 BaseChannel *chp; // serial port
 
@@ -103,8 +104,9 @@ static msg_t GPS(void *arg) {
   (void)arg;
   chRegSetThreadName("GPS");
   while (TRUE) {
+    // Read a byte off the GPS
     uint8_t c = chIOGet((BaseChannel *)&SD1);
-    chIOPut(chp, c);
+    //chIOPut(chp, c);
   }
   return 0;
 }
@@ -144,6 +146,7 @@ int main(void) {
   sdStart(&SD1, &sd1cfg);
   palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(7)); // not currently connected
   palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(7)); // incoming data from the GPS
+  //TinyGPS_init();
   serial_println("OK");
 
   /*

@@ -81,6 +81,7 @@ CSRC = $(PORTSRC) \
        $(CHIBIOS)/os/various/chprintf.c \
        $(CHIBIOS)/os/various/shell.c \
        serial_help.c \
+       TinyGPS.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
