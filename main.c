@@ -187,5 +187,11 @@ int main(void) {
    */
   while (TRUE) {
     chThdSleepMilliseconds(500);
+
+    long lat, lon;
+    unsigned long fix_age;
+    TinyGPS_get_position(&lat, &lon, &fix_age);
+
+    chprintf(chp, "GPS: %d, %d, %d\r\n", lat, lon, fix_age);
   }
 }
