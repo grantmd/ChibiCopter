@@ -104,8 +104,13 @@ static msg_t GPS(void *arg) {
   (void)arg;
   chRegSetThreadName("GPS");
   while (TRUE) {
+    unsigned char newdata = 0;
     // Read a byte off the GPS
     uint8_t c = chIOGet((BaseChannel *)&SD1);
+    if (TinyGPS_encode(c)){
+        newdata = 1;
+        //serial_println("Got GPS data.");
+    }
     //chIOPut(chp, c);
   }
   return 0;
