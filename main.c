@@ -11,10 +11,9 @@
 #include "hal.h"
 
 #include "lis302dl.h"
-#include "chprintf.h"
 #include "shell.h"
+#include "chprintf.h"
 
-#include "serial_help.h"
 #include "TinyGPS.h"
 
 BaseChannel *chp; // serial port
@@ -109,7 +108,7 @@ static msg_t GPS(void *arg) {
     uint8_t c = chIOGet((BaseChannel *)&SD1);
     if (TinyGPS_encode(c)){
         newdata = 1;
-        //serial_println("Got GPS data.");
+        //chprintf(chp, "Got GPS data.\r\n");
     }
     //chIOPut(chp, c);
   }
@@ -140,24 +139,24 @@ int main(void) {
   chp = &SD2;
   palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7)); // yellow wire on the FTDI cable
   palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7)); // orange wire on the FTDI cable
-  serial_println("Hello, startup!");
+  chprintf(chp, "Hello, startup!\r\n");
 
   /*
    * Activates the serial driver 1 using the driver default configuration, but at 38400
    * PA9(TX) and PA10(RX) are routed to USART1.
    */
 
-  serial_print("GPS...");
+  chprintf(chp, "GPS...");
   sdStart(&SD1, &sd1cfg);
   palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(7)); // not currently connected
   palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(7)); // incoming data from the GPS
   //TinyGPS_init();
-  serial_println("OK");
+  chprintf(chp, "OK\r\n");
 
   /*
    * SPI1 I/O pins setup.
    */
-  serial_print("SPI...");
+  chprintf(chp, "SPI...");
   /*
    * Initializes the SPI driver 1 in order to access the MEMS. The signals
    * are initialized in the board file.
@@ -167,18 +166,18 @@ int main(void) {
   lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG1, 0x43);
   lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG2, 0x00);
   lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG3, 0x00);
-  serial_println("OK");
-  serial_println("I/O configured.");
+  chprintf(chp, "OK\r\n");
+  chprintf(chp, "I/O configured.\r\n");
 
   /*
    * Creates the threads
    */
-  serial_print("Launching threads...");
+  chprintf(chp, "Launching threads...");
   chThdCreateStatic(BlinkWA, sizeof(BlinkWA), NORMALPRIO, Blink, NULL);
   chThdCreateStatic(GPSWA, sizeof(GPSWA), NORMALPRIO, GPS, NULL);
-  serial_println("OK");
+  chprintf(chp, "OK\r\n");
 
-  serial_print("Starting shell...");
+  chprintf(chp, "Starting shell...");
   shellInit();
   shellCreateStatic(&shell_cfg1, waShell, sizeof(waShell), NORMALPRIO);
 

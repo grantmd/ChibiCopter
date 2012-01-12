@@ -80,7 +80,6 @@ CSRC = $(PORTSRC) \
        $(CHIBIOS)/os/various/lis302dl.c \
        $(CHIBIOS)/os/various/chprintf.c \
        $(CHIBIOS)/os/various/shell.c \
-       serial_help.c \
        TinyGPS.c \
        main.c
 
