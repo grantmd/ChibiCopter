@@ -109,6 +109,8 @@ int main(void) {
   palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7)); // orange wire on the FTDI cable
   chprintf(chp, "Hello, startup!\r\n");
 
+  chprintf(chp, "Configurating I/O.\r\n");
+
   /*
    * Activates the serial driver 1 using the driver default configuration, but at 38400
    * PA9(TX) and PA10(RX) are routed to USART1.
@@ -135,6 +137,19 @@ int main(void) {
   lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG2, 0x00);
   lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG3, 0x00);
   chprintf(chp, "OK\r\n");
+
+  /*
+   * Receiver I/O
+   */
+  chprintf(chp, "Receiver...");
+  palSetPadMode(GPIOE, 10, PIN_MODE_INPUT(9));  // THRO
+  palSetPadMode(GPIOE, 11, PIN_MODE_INPUT(10)); // AILE
+  palSetPadMode(GPIOE, 12, PIN_MODE_INPUT(11)); // ELEV
+  palSetPadMode(GPIOE, 13, PIN_MODE_INPUT(12)); // RUDD
+  palSetPadMode(GPIOE, 14, PIN_MODE_INPUT(13)); // GEAR
+  palSetPadMode(GPIOE, 15, PIN_MODE_INPUT(14)); // AUX1
+  chprintf(chp, "OK\r\n");
+
   chprintf(chp, "I/O configured.\r\n");
 
   /*
