@@ -14,6 +14,7 @@
 #include "chprintf.h"
 
 #include "TinyGPS.h"
+#include "Receiver.h"
 
 BaseChannel *chp; // serial port
 
@@ -142,12 +143,7 @@ int main(void) {
    * Receiver I/O
    */
   chprintf(chp, "Receiver...");
-  palSetPadMode(GPIOE, 10, PIN_MODE_INPUT(9));  // THRO
-  palSetPadMode(GPIOE, 11, PIN_MODE_INPUT(10)); // AILE
-  palSetPadMode(GPIOE, 12, PIN_MODE_INPUT(11)); // ELEV
-  palSetPadMode(GPIOE, 13, PIN_MODE_INPUT(12)); // RUDD
-  palSetPadMode(GPIOE, 14, PIN_MODE_INPUT(13)); // GEAR
-  palSetPadMode(GPIOE, 15, PIN_MODE_INPUT(14)); // AUX1
+  ReceiverInit();
   chprintf(chp, "OK\r\n");
 
   chprintf(chp, "I/O configured.\r\n");
