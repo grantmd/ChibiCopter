@@ -9,10 +9,10 @@
 #include "hal.h"
 
 void ReceiverInit(void){
-	palSetPadMode(GPIOE, 10, PIN_MODE_INPUT(9));  // THRO
-	palSetPadMode(GPIOE, 11, PIN_MODE_INPUT(10)); // AILE
-	palSetPadMode(GPIOE, 12, PIN_MODE_INPUT(11)); // ELEV
-	palSetPadMode(GPIOE, 13, PIN_MODE_INPUT(12)); // RUDD
-	palSetPadMode(GPIOE, 14, PIN_MODE_INPUT(13)); // GEAR
-	palSetPadMode(GPIOE, 15, PIN_MODE_INPUT(14)); // AUX1
+	palSetPadMode(GPIOE, 10, PAL_MODE_ALTERNATE(2));  // THRO
+	palSetPadMode(GPIOE, 11, PAL_MODE_ALTERNATE(2)); // AILE
+	palSetPadMode(GPIOE, 12, PAL_MODE_ALTERNATE(2)); // ELEV
+	palSetPadMode(GPIOE, 13, PAL_MODE_ALTERNATE(2)); // RUDD
+	palSetPadMode(GPIOE, 14, PAL_MODE_ALTERNATE(2)); // GEAR
+	palSetPadMode(GPIOE, 15, PAL_MODE_ALTERNATE(2)); // AUX1
 }
