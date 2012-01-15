@@ -9,29 +9,29 @@
 #include "hal.h"
 #include "chprintf.h"
 
+#include "Receiver.h"
+
 icucnt_t last_width, last_period;
 
 static void icuwidthcb(ICUDriver *icup) {
 
   last_width = icuGetWidthI(icup);
-  chprintf((BaseChannel *)&SD2, "ICU width: %d.\r\n", last_width);
 }
 
 static void icuperiodcb(ICUDriver *icup) {
 
   last_period = icuGetPeriodI(icup);
-  chprintf((BaseChannel *)&SD2, "ICU period: %d.\r\n", last_period);
 }
 
 static ICUConfig icucfg = {
-  ICU_INPUT_ACTIVE_LOW,
-  10000,                                    /* 10KHz ICU clock frequency.   */
+  ICU_INPUT_ACTIVE_HIGH,
+  1000000,                                    /* 1MHz ICU clock frequency.   */
   icuwidthcb,
   icuperiodcb
 };
 
 void ReceiverInit(void){
-	icuStart(&ICUD1, &icucfg);
+	/*icuStart(&ICUD1, &icucfg);
 	palSetPadMode(GPIOE, 10, PAL_MODE_ALTERNATE(2)); // THRO
 	palSetPadMode(GPIOE, 11, PAL_MODE_ALTERNATE(2)); // AILE
 	palSetPadMode(GPIOE, 12, PAL_MODE_ALTERNATE(2)); // ELEV
@@ -39,5 +39,12 @@ void ReceiverInit(void){
 	palSetPadMode(GPIOE, 14, PAL_MODE_ALTERNATE(2)); // GEAR
 	palSetPadMode(GPIOE, 15, PAL_MODE_ALTERNATE(2)); // AUX1
 
-	icuEnable(&ICUD1);
+	icuEnable(&ICUD1);*/
+
+	icuStart(&ICUD3, &icucfg);
+	palSetPadMode(GPIOC, 6, PAL_MODE_ALTERNATE(2));
+	icuEnable(&ICUD3);
 }
+
+icucnt_t ReceiverGetWidth(void){ return last_width; }
+icucnt_t ReceiverGetPeriod(void){ return last_period; }

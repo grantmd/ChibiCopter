@@ -160,7 +160,7 @@ int main(void) {
    * Normal main() thread activity
    */
   while (TRUE) {
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(1000);
 
     long lat, lon;
     unsigned long fix_age;
@@ -171,5 +171,9 @@ int main(void) {
     char month, day, hour, minute, second, hundredths;
     TinyGPS_crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &fix_age);
     //chprintf(chp, "GPS date/time: %d/%d/%d, %d:%d:%d.%d, %d\r\n", year, month, day, hour, minute, second, fix_age);
+
+
+    chprintf(chp, "ICU width: %d.\r\n", ReceiverGetWidth());
+    chprintf(chp, "ICU period: %d.\r\n", ReceiverGetPeriod());
   }
 }

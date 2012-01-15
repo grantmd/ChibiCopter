@@ -10,4 +10,7 @@
 
 void ReceiverInit(void);
 
+icucnt_t ReceiverGetWidth(void);
+icucnt_t ReceiverGetPeriod(void);
+
 #endif /* _RECEIVER_H_ */
