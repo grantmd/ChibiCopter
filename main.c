@@ -173,7 +173,6 @@ int main(void) {
     //chprintf(chp, "GPS date/time: %d/%d/%d, %d:%d:%d.%d, %d\r\n", year, month, day, hour, minute, second, fix_age);
 
 
-    chprintf(chp, "ICU width: %d.\r\n", ReceiverGetWidth());
-    chprintf(chp, "ICU period: %d.\r\n", ReceiverGetPeriod());
+    chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
   }
 }

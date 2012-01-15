@@ -11,40 +11,39 @@
 
 #include "Receiver.h"
 
-icucnt_t last_width, last_period;
+icucnt_t receiver_data[MAX_RC_CHANNELS];
 
-static void icuwidthcb(ICUDriver *icup) {
+static void throttle_cb(ICUDriver *icup) {
 
-  last_width = icuGetWidthI(icup);
+  receiver_data[THROTTLE_CHANNEL] = icuGetWidthI(icup);
 }
 
-static void icuperiodcb(ICUDriver *icup) {
-
-  last_period = icuGetPeriodI(icup);
-}
-
-static ICUConfig icucfg = {
+static ICUConfig throttlecfg = {
   ICU_INPUT_ACTIVE_HIGH,
   1000000,                                    /* 1MHz ICU clock frequency.   */
-  icuwidthcb,
-  icuperiodcb
+  throttle_cb,
+  NULL
 };
 
 void ReceiverInit(void){
-	/*icuStart(&ICUD1, &icucfg);
-	palSetPadMode(GPIOE, 10, PAL_MODE_ALTERNATE(2)); // THRO
-	palSetPadMode(GPIOE, 11, PAL_MODE_ALTERNATE(2)); // AILE
-	palSetPadMode(GPIOE, 12, PAL_MODE_ALTERNATE(2)); // ELEV
-	palSetPadMode(GPIOE, 13, PAL_MODE_ALTERNATE(2)); // RUDD
-	palSetPadMode(GPIOE, 14, PAL_MODE_ALTERNATE(2)); // GEAR
-	palSetPadMode(GPIOE, 15, PAL_MODE_ALTERNATE(2)); // AUX1
+	unsigned i;
+	for (i=0; i<MAX_RC_CHANNELS; i++){
+		receiver_data[i] = 1000;
+	}
 
-	icuEnable(&ICUD1);*/
-
-	icuStart(&ICUD3, &icucfg);
-	palSetPadMode(GPIOC, 6, PAL_MODE_ALTERNATE(2));
-	icuEnable(&ICUD3);
+	icuStart(&ICUD1, &throttlecfg);
+	palSetPadMode(GPIOE,  9, PAL_MODE_ALTERNATE(1)); // THRO
+	//palSetPadMode(GPIOE,  9, PAL_MODE_ALTERNATE(1)); // AILE
+	//palSetPadMode(GPIOE, 10, PAL_MODE_ALTERNATE(1)); // ELEV
+	//palSetPadMode(GPIOE, 11, PAL_MODE_ALTERNATE(1)); // RUDD
+	//palSetPadMode(GPIOE, 12, PAL_MODE_ALTERNATE(1)); // GEAR
+	//palSetPadMode(GPIOE, 13, PAL_MODE_ALTERNATE(1)); // AUX1
+	icuEnable(&ICUD1);
 }
 
-icucnt_t ReceiverGetWidth(void){ return last_width; }
-icucnt_t ReceiverGetPeriod(void){ return last_period; }
+inline icucnt_t ReceiverGetThrottle(void){ return receiver_data[THROTTLE_CHANNEL]; }
+inline icucnt_t ReceiverGetAile(void){ return receiver_data[AILE_CHANNEL]; }
+inline icucnt_t ReceiverGetElev(void){ return receiver_data[ELEV_CHANNEL]; }
+inline icucnt_t ReceiverGetRudd(void){ return receiver_data[RUDD_CHANNEL]; }
+inline icucnt_t ReceiverGetGear(void){ return receiver_data[GEAR_CHANNEL]; }
+inline icucnt_t ReceiverGetAux1(void){ return receiver_data[AUX1_CHANNEL]; }
