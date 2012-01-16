@@ -15,6 +15,7 @@
 
 #include "TinyGPS.h"
 #include "Receiver.h"
+#include "Motors.h"
 
 BaseChannel *chp; // serial port
 
