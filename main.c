@@ -41,18 +41,18 @@ static msg_t Blink(void *arg) {
   (void)arg;
   chRegSetThreadName("blinker");
   while (TRUE) {
-    palSetPad(GPIOD, GPIOD_LED5);
+    //palSetPad(GPIOD, GPIOD_LED5); // red
     chThdSleepMilliseconds(100);
-    palClearPad(GPIOD, GPIOD_LED5);
-    palSetPad(GPIOD, GPIOD_LED6);
+    //palClearPad(GPIOD, GPIOD_LED5); // red
+    palSetPad(GPIOD, GPIOD_LED6); // blue
     chThdSleepMilliseconds(100);
-    palClearPad(GPIOD, GPIOD_LED6);
-    palSetPad(GPIOD, GPIOD_LED4);
+    palClearPad(GPIOD, GPIOD_LED6); // blue
+    //palSetPad(GPIOD, GPIOD_LED4); // green
     chThdSleepMilliseconds(100);
-    palClearPad(GPIOD, GPIOD_LED4);
-    palSetPad(GPIOD, GPIOD_LED3);
+    //palClearPad(GPIOD, GPIOD_LED4); // green
+    palSetPad(GPIOD, GPIOD_LED3); // orange
     chThdSleepMilliseconds(100);
-    palClearPad(GPIOD, GPIOD_LED3);
+    palClearPad(GPIOD, GPIOD_LED3); // orange
   }
   return 0;
 }
@@ -147,6 +147,13 @@ int main(void) {
   ReceiverInit();
   chprintf(chp, "OK\r\n");
 
+  /*
+   * Motors I/O
+   */
+  chprintf(chp, "Motors...");
+  MotorsInit();
+  chprintf(chp, "OK\r\n");
+
   chprintf(chp, "I/O configured.\r\n");
 
   /*
@@ -160,8 +167,11 @@ int main(void) {
   /*
    * Normal main() thread activity
    */
+
+  pwmcnt_t speed = 1000;
   while (TRUE) {
-    chThdSleepMilliseconds(1000);
+    MotorsSetSpeed(0, speed);
+    chThdSleepMilliseconds(5000);
 
     long lat, lon;
     unsigned long fix_age;
@@ -173,7 +183,10 @@ int main(void) {
     TinyGPS_crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &fix_age);
     //chprintf(chp, "GPS date/time: %d/%d/%d, %d:%d:%d.%d, %d\r\n", year, month, day, hour, minute, second, fix_age);
 
-
+    chprintf(chp, "Motor: %d.\r\n", MotorsGetSpeed(0));
     chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
+
+    speed += 100;
+    if (speed == 2100) speed = 1000;
   }
 }

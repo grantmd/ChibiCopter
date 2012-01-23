@@ -11,26 +11,38 @@
 
 #include "Motors.h"
 
+static void pwmpcb(PWMDriver *pwmp) {
+
+	(void)pwmp;
+	palClearPad(GPIOD, GPIOD_LED5); // red
+}
+
+static void pwmc1cb(PWMDriver *pwmp) {
+
+	(void)pwmp;
+	palSetPad(GPIOD, GPIOD_LED5); // red
+}
+
 static PWMConfig pwmcfg = {
-  10000,                                    /* 10KHz PWM clock frequency.   */
-  10000,                                    /* Initial PWM period 1S.       */
-  NULL,
-  {
-   {PWM_OUTPUT_ACTIVE_HIGH, NULL},
-   {PWM_OUTPUT_ACTIVE_HIGH, NULL},
-   {PWM_OUTPUT_ACTIVE_HIGH, NULL},
-   {PWM_OUTPUT_ACTIVE_HIGH, NULL}
-  },
-  0,
-  0
+	10000,                                    /* 10KHz PWM clock frequency.   */
+	10000,                                    /* Initial PWM period 1S.       */
+	pwmpcb,
+	{
+		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb},
+		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb},
+		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb},
+		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb}
+	},
+	0,
 };
 
 pwmcnt_t motor_speeds[NUM_MOTORS];
 
-void MotorosInit(void){
+void MotorsInit(void){
+
 	unsigned i;
 	for (i=0; i<NUM_MOTORS; i++){
-		motor_speeds[i] = 0;
+		motor_speeds[i] = 1000;
 	}
 
 	pwmStart(&PWMD8, &pwmcfg);
@@ -44,5 +56,10 @@ void MotorsSetSpeed(unsigned motor, pwmcnt_t speed){
 	if (motor >= NUM_MOTORS) return;
 
 	motor_speeds[motor] = speed;
-	pwmEnableChannel(&PWMD8, motor, speed);
+	pwmEnableChannel(&PWMD8, motor, PWM_FRACTION_TO_WIDTH(&PWMD8, 1000, speed-1000));
+}
+
+pwmcnt_t MotorsGetSpeed(unsigned motor){
+	if (motor >= NUM_MOTORS) return 0;
+	return motor_speeds[motor];
 }

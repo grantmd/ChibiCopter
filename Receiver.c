@@ -15,14 +15,24 @@ icucnt_t receiver_data[MAX_RC_CHANNELS];
 
 static void throttle_cb(ICUDriver *icup) {
 
-  receiver_data[THROTTLE_CHANNEL] = icuGetWidthI(icup);
+	icucnt_t width = icuGetWidthI(icup);
+	if (width < 1000 || width > 10000) return;
+
+	receiver_data[THROTTLE_CHANNEL] = width / 10 + 1000;
+	palSetPad(GPIOD, GPIOD_LED4); // green
+}
+
+static void icuperiodcb(ICUDriver *icup) {
+
+	(void)icup;
+	palClearPad(GPIOD, GPIOD_LED4); // green
 }
 
 static ICUConfig throttlecfg = {
-  ICU_INPUT_ACTIVE_HIGH,
-  1000000,                                    /* 1MHz ICU clock frequency.   */
-  throttle_cb,
-  NULL
+	ICU_INPUT_ACTIVE_HIGH,
+	10000,                                    /* 10KHz ICU clock frequency.   */
+	throttle_cb,
+	icuperiodcb
 };
 
 void ReceiverInit(void){

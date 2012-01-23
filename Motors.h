@@ -13,5 +13,6 @@
 void MotorsInit(void);
 
 void MotorsSetSpeed(unsigned motor, pwmcnt_t speed);
+pwmcnt_t MotorsGetSpeed(unsigned motor);
 
 #endif /* _MOTORS_H_ */
