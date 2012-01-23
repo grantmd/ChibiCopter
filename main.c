@@ -168,25 +168,25 @@ int main(void) {
    * Normal main() thread activity
    */
 
-  pwmcnt_t speed = 1000;
   while (TRUE) {
-    MotorsSetSpeed(0, speed);
-    chThdSleepMilliseconds(5000);
+    //chThdSleepMilliseconds(1000);
 
-    long lat, lon;
-    unsigned long fix_age;
-    TinyGPS_get_position(&lat, &lon, &fix_age);
+    //long lat, lon;
+    //unsigned long fix_age;
+    //TinyGPS_get_position(&lat, &lon, &fix_age);
     //chprintf(chp, "GPS location: %d, %d, %d\r\n", lat, lon, fix_age);
 
-    int year;
-    char month, day, hour, minute, second, hundredths;
-    TinyGPS_crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &fix_age);
+    //int year;
+    //char month, day, hour, minute, second, hundredths;
+    //TinyGPS_crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &fix_age);
     //chprintf(chp, "GPS date/time: %d/%d/%d, %d:%d:%d.%d, %d\r\n", year, month, day, hour, minute, second, fix_age);
 
-    chprintf(chp, "Motor: %d.\r\n", MotorsGetSpeed(0));
-    chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
+    //chprintf(chp, "Motor: %d.\r\n", MotorsGetSpeed(0));
+    //chThdSleepMilliseconds(100);
+    //chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
+    MotorsSetSpeed(0, ReceiverGetThrottle());
 
-    speed += 100;
-    if (speed == 2100) speed = 1000;
+    //speed += 100;
+    //if (speed == 2100) speed = 1000;
   }
 }

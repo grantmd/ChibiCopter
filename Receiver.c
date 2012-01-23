@@ -15,11 +15,12 @@ icucnt_t receiver_data[MAX_RC_CHANNELS];
 
 static void throttle_cb(ICUDriver *icup) {
 
+	palSetPad(GPIOD, GPIOD_LED4); // green
+
 	icucnt_t width = icuGetWidthI(icup);
 	if (width < 1000 || width > 10000) return;
 
 	receiver_data[THROTTLE_CHANNEL] = width / 10 + 1000;
-	palSetPad(GPIOD, GPIOD_LED4); // green
 }
 
 static void icuperiodcb(ICUDriver *icup) {
