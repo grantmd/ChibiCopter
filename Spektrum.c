@@ -11,7 +11,7 @@
 #include "Spektrum.h"
 
 static const SerialConfig sd3cfg = {
-	57600,
+	115200,
 	0,
 	USART_CR2_STOP1_BITS | USART_CR2_LINEN,
 	0
