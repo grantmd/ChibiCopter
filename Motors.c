@@ -24,8 +24,8 @@ static void pwmc1cb(PWMDriver *pwmp) {
 }
 
 static PWMConfig pwmcfg = {
-	10000,                                    /* 10KHz PWM clock frequency.   */
-	10000,                                    /* Initial PWM period 1S.       */
+	100000, /* 100KHz PWM clock frequency.   */
+	100000, /* Initial PWM period 1S.       */
 	pwmpcb,
 	{
 		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb},

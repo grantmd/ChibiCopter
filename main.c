@@ -189,9 +189,10 @@ int main(void){
 
     SpektrumRead();
 
+    chprintf(chp, "Setting motor speed to: %d\r\n", speed);
     MotorsSetSpeed(0, speed);
     speed += 100;
-    if (speed >= MAX_MOTOR_SPEED) speed = 0;
-    chThdSleepMilliseconds(1000);
+    if (speed > MAX_MOTOR_SPEED) speed = 0;
+    chThdSleepMilliseconds(5000);
   }
 }
