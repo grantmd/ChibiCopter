@@ -114,7 +114,7 @@ int main(void) {
   chprintf(chp, "Configurating I/O.\r\n");
 
   /*
-   * Activates the serial driver 1 using the driver default configuration, but at 38400
+   * Activates the serial driver 1 using the driver default configuration, but at 57600
    * PA9(TX) and PA10(RX) are routed to USART1.
    */
 
