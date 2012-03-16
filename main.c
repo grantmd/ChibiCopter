@@ -168,7 +168,7 @@ int main(void) {
    * Normal main() thread activity
    */
 
-  int speed = 0;
+  int speed = 1000;
   while (TRUE) {
     //chThdSleepMilliseconds(1000);
 
