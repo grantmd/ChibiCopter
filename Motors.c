@@ -24,8 +24,8 @@ static void pwmc1cb(PWMDriver *pwmp) {
 }
 
 static PWMConfig pwmcfg = {
-	100000, /* 100KHz PWM clock frequency.   */
-	100000, /* Initial PWM period 1S.       */
+	1000000, /* 1MHz PWM clock frequency.   */
+	0,       /* Initial PWM period 0S.       */
 	pwmpcb,
 	{
 		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb},
@@ -34,6 +34,7 @@ static PWMConfig pwmcfg = {
 		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb}
 	},
 	0,
+	0
 };
 
 pwmcnt_t motor_speeds[NUM_MOTORS];
