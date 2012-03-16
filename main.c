@@ -15,8 +15,9 @@
 
 #include "TinyGPS.h"
 #include "Motors.h"
+#include "Spektrum.h"
 
-BaseChannel *chp; // serial port
+BaseChannel *chp; // debugging serial port
 
 /*
  * SPI1 configuration structure.
@@ -142,9 +143,9 @@ int main(void) {
   /*
    * Receiver I/O
    */
-  /*chprintf(chp, "Receiver...");
-  ReceiverInit();
-  chprintf(chp, "OK\r\n");*/
+  chprintf(chp, "Receiver...");
+  SpektrumInit();
+  chprintf(chp, "OK\r\n");
 
   /*
    * Motors I/O
