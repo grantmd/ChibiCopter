@@ -81,7 +81,6 @@ CSRC = $(PORTSRC) \
        $(CHIBIOS)/os/various/chprintf.c \
        $(CHIBIOS)/os/various/shell.c \
        TinyGPS.c \
-       Receiver.c \
        Motors.c \
        main.c
 

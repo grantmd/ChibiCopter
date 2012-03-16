@@ -14,7 +14,6 @@
 #include "chprintf.h"
 
 #include "TinyGPS.h"
-#include "Receiver.h"
 #include "Motors.h"
 
 BaseChannel *chp; // serial port
@@ -143,9 +142,9 @@ int main(void) {
   /*
    * Receiver I/O
    */
-  chprintf(chp, "Receiver...");
+  /*chprintf(chp, "Receiver...");
   ReceiverInit();
-  chprintf(chp, "OK\r\n");
+  chprintf(chp, "OK\r\n");*/
 
   /*
    * Motors I/O
@@ -184,7 +183,7 @@ int main(void) {
     //chprintf(chp, "Motor: %d.\r\n", MotorsGetSpeed(0));
     //chThdSleepMilliseconds(100);
     //chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
-    MotorsSetSpeed(0, ReceiverGetThrottle());
+    //MotorsSetSpeed(0, ReceiverGetThrottle());
 
     //speed += 100;
     //if (speed == 2100) speed = 1000;
