@@ -42,7 +42,7 @@ void MotorsInit(void){
 
 	unsigned i;
 	for (i=0; i<NUM_MOTORS; i++){
-		motor_speeds[i] = 1000;
+		motor_speeds[i] = 0;
 	}
 
 	pwmStart(&PWMD8, &pwmcfg);
@@ -54,9 +54,10 @@ void MotorsInit(void){
 
 void MotorsSetSpeed(unsigned motor, pwmcnt_t speed){
 	if (motor >= NUM_MOTORS) return;
+	if (speed > MAX_MOTOR_SPEED) speed = MAX_MOTOR_SPEED;
 
 	motor_speeds[motor] = speed;
-	pwmEnableChannel(&PWMD8, motor, PWM_FRACTION_TO_WIDTH(&PWMD8, 1000, speed-1000));
+	pwmEnableChannel(&PWMD8, motor, PWM_FRACTION_TO_WIDTH(&PWMD8, 1000, speed));
 }
 
 pwmcnt_t MotorsGetSpeed(unsigned motor){

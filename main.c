@@ -36,11 +36,11 @@ static const SPIConfig spi1cfg = {
  * This is a periodic thread that blinks some leds
  */
 static WORKING_AREA(BlinkWA, 128);
-static msg_t Blink(void *arg) {
+static msg_t Blink(void *arg){
 
   (void)arg;
   chRegSetThreadName("blinker");
-  while (TRUE) {
+  while (TRUE){
     //palSetPad(GPIOD, GPIOD_LED5); // red
     chThdSleepMilliseconds(100);
     //palClearPad(GPIOD, GPIOD_LED5); // red
@@ -68,7 +68,7 @@ static const SerialConfig sd1cfg = {
 };
 
 static WORKING_AREA(GPSWA, 128);
-static msg_t GPS(void *arg) {
+static msg_t GPS(void *arg){
 
   (void)arg;
   chRegSetThreadName("GPS");
@@ -88,7 +88,7 @@ static msg_t GPS(void *arg) {
 /*
  * Application entry point.
  */
-int main(void) {
+int main(void){
 
   /*
    * System initializations.
@@ -168,8 +168,8 @@ int main(void) {
    * Normal main() thread activity
    */
 
-  int speed = 1000;
-  while (TRUE) {
+  int speed = 0;
+  while (TRUE){
     //chThdSleepMilliseconds(1000);
 
     //long lat, lon;
@@ -191,7 +191,7 @@ int main(void) {
 
     MotorsSetSpeed(0, speed);
     speed += 100;
-    if (speed == 2100) speed = 1000;
+    if (speed >= MAX_MOTOR_SPEED) speed = 0;
     chThdSleepMilliseconds(1000);
   }
 }
