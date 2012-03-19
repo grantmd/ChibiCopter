@@ -188,10 +188,11 @@ int main(void){
 		//chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
 		//MotorsSetSpeed(0, ReceiverGetThrottle());
 
-		SpektrumRead();
+		//SpektrumRead();
 
-		chprintf(chp, "Setting motor speed to: %d\r\n", speed);
+		chprintf(chp, "Setting motor speed to: %d", speed);
 		MotorsSetSpeed(0, speed);
+		chprintf(chp, " OK\r\n");
 		speed += 100;
 		if (speed > MAX_MOTOR_SPEED) speed = 0;
 		chThdSleepMilliseconds(1000);
