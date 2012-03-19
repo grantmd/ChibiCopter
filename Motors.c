@@ -13,7 +13,7 @@
 
 static PWMConfig pwmcfg = {
 	1000000, /* 1MHz PWM clock frequency.   */
-	20000,   /* Initial PWM period 20ms.    */ // 50hz (20ms) for standard servo/ESC, 400hz for fast servo/ESC (2.5ms)
+	2500,   /* Initial PWM period 20ms.    */ // 50hz (20ms) for standard servo/ESC, 400hz for fast servo/ESC (2.5ms)
 	NULL,
 	{
 		{PWM_OUTPUT_ACTIVE_HIGH, NULL},
@@ -36,7 +36,7 @@ void MotorsInit(void){
 	palSetPadMode(GPIOC, 7, PAL_MODE_ALTERNATE(3));
 	palSetPadMode(GPIOC, 8, PAL_MODE_ALTERNATE(3));
 	palSetPadMode(GPIOC, 9, PAL_MODE_ALTERNATE(3));
-	
+
 	unsigned i;
 	for (i=0; i<NUM_MOTORS; i++){
 		MotorsSetSpeed(i, 0);
