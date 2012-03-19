@@ -9,7 +9,7 @@
 #define _MOTORS_H_
 
 #define NUM_MOTORS 4
-#define MAX_MOTOR_SPEED 1000
+#define MAX_MOTOR_SPEED 10000
 
 void MotorsInit(void);
 

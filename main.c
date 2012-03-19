@@ -152,6 +152,7 @@ int main(void){
 	 */
 	chprintf(chp, "Motors...");
 	MotorsInit();
+	chThdSleepMilliseconds(1000);
 	chprintf(chp, "OK\r\n");
 
 	chprintf(chp, "I/O configured.\r\n");
@@ -193,6 +194,6 @@ int main(void){
 		MotorsSetSpeed(0, speed);
 		speed += 100;
 		if (speed > MAX_MOTOR_SPEED) speed = 0;
-		chThdSleepMilliseconds(5000);
+		chThdSleepMilliseconds(1000);
 	}
 }

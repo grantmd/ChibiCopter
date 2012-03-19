@@ -11,30 +11,20 @@
 
 #include "Motors.h"
 
-static void pwmpcb(PWMDriver *pwmp) {
-
-	(void)pwmp;
-	palClearPad(GPIOD, GPIOD_LED5); // red
-}
-
-static void pwmc1cb(PWMDriver *pwmp) {
-
-	(void)pwmp;
-	palSetPad(GPIOD, GPIOD_LED5); // red
-}
-
 static PWMConfig pwmcfg = {
 	1000000, /* 1MHz PWM clock frequency.   */
-	0,       /* Initial PWM period 0S.       */
-	pwmpcb,
+	20000,   /* Initial PWM period 20ms.    */ // 50hz (20ms) for standard servo/ESC, 400hz for fast servo/ESC (2.5ms)
+	NULL,
 	{
-		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb},
-		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb},
-		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb},
-		{PWM_OUTPUT_ACTIVE_HIGH, pwmc1cb}
+		{PWM_OUTPUT_ACTIVE_HIGH, NULL},
+		{PWM_OUTPUT_ACTIVE_HIGH, NULL},
+		{PWM_OUTPUT_ACTIVE_HIGH, NULL},
+		{PWM_OUTPUT_ACTIVE_HIGH, NULL}
 	},
 	0,
+#if STM32_PWM_USE_ADVANCED
 	0
+#endif
 };
 
 pwmcnt_t motor_speeds[NUM_MOTORS];
@@ -43,7 +33,7 @@ void MotorsInit(void){
 
 	unsigned i;
 	for (i=0; i<NUM_MOTORS; i++){
-		motor_speeds[i] = 0;
+		MotorsSetSpeed(i, 0);
 	}
 
 	pwmStart(&PWMD8, &pwmcfg);
@@ -58,7 +48,7 @@ void MotorsSetSpeed(unsigned motor, pwmcnt_t speed){
 	if (speed > MAX_MOTOR_SPEED) speed = MAX_MOTOR_SPEED;
 
 	motor_speeds[motor] = speed;
-	pwmEnableChannel(&PWMD8, motor, PWM_FRACTION_TO_WIDTH(&PWMD8, 1000, speed));
+	pwmEnableChannel(&PWMD8, motor, PWM_PERCENTAGE_TO_WIDTH(&PWMD8, speed));
 }
 
 pwmcnt_t MotorsGetSpeed(unsigned motor){
