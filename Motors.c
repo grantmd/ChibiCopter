@@ -31,16 +31,16 @@ pwmcnt_t motor_speeds[NUM_MOTORS];
 
 void MotorsInit(void){
 
-	unsigned i;
-	for (i=0; i<NUM_MOTORS; i++){
-		MotorsSetSpeed(i, 0);
-	}
-
 	pwmStart(&PWMD8, &pwmcfg);
 	palSetPadMode(GPIOC, 6, PAL_MODE_ALTERNATE(3));
 	palSetPadMode(GPIOC, 7, PAL_MODE_ALTERNATE(3));
 	palSetPadMode(GPIOC, 8, PAL_MODE_ALTERNATE(3));
 	palSetPadMode(GPIOC, 9, PAL_MODE_ALTERNATE(3));
+	
+	unsigned i;
+	for (i=0; i<NUM_MOTORS; i++){
+		MotorsSetSpeed(i, 0);
+	}
 }
 
 void MotorsSetSpeed(unsigned motor, pwmcnt_t speed){
