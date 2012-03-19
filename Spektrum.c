@@ -56,7 +56,7 @@ void SpektrumInit(void){
 
 /*
  * Reads data off of the serial connection and runs it through the parser
- * TODO: This should be a thread
+ * TODO: This should be a thread, or we should switch to UART and just use the callbacks
  */
 
 void SpektrumRead(void){
