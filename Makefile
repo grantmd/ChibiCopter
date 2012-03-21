@@ -191,7 +191,7 @@ UDEFS =
 UADEFS =
 
 # List all user directories here
-UINCDIR =
+UINCDIR = ../mavlink/include ../mavlink/include/common
 
 # List the user directory to look for the libraries here
 ULIBDIR =
