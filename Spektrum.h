@@ -20,7 +20,6 @@
 
 // Public functions
 void SpektrumInit(void);
-void SpektrumRead(void);
 int getChannelData(int channel);
 
 // Private functions

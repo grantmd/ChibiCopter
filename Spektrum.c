@@ -10,8 +10,22 @@
 
 #include "Spektrum.h"
 
+static void rxchar(UARTDriver *uartp, uint16_t c) {
+
+	(void)uartp;
+	chSysLockFromIsr();
+	if (_SpektrumParse(c)){
+	}
+	chSysUnlockFromIsr();
+}
+
 // Our config for the serial connection to the RX
-static const SerialConfig sd3cfg = {
+static UARTConfig uart3cfg = {
+	NULL,
+	NULL,
+	NULL,
+	rxchar,
+	NULL, // TODO: We may need this
 	115200,
 	0,
 	USART_CR2_STOP1_BITS | USART_CR2_LINEN,
@@ -40,7 +54,7 @@ spektrum_t rx_state;
 
 void SpektrumInit(void){
 
-	sdStart(&SD3, &sd3cfg);
+	uartStart(&UARTD3, &uart3cfg);
 	palSetPadMode(GPIOD, 8, PAL_MODE_ALTERNATE(7)); // not currently connected
 	palSetPadMode(GPIOD, 9, PAL_MODE_ALTERNATE(7)); // incoming data from the receiver
 
@@ -52,18 +66,6 @@ void SpektrumInit(void){
 	rx_state.state = 0;
 	rx_state.valid = 0;
 	rx_state.frameNum = 0L;
-}
-
-/*
- * Reads data off of the serial connection and runs it through the parser
- * TODO: This should be a thread, or we should switch to UART and just use the callbacks
- */
-
-void SpektrumRead(void){
-	// Read a byte off the receiver
-    uint8_t c = chIOGet((BaseChannel *)&SD3);
-    if (_SpektrumParse(c)){
-    }
 }
 
 /*

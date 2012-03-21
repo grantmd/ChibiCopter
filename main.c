@@ -188,8 +188,6 @@ int main(void){
 		//chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
 		//MotorsSetSpeed(0, ReceiverGetThrottle());
 
-		//SpektrumRead();
-
 		chprintf(chp, "Setting motor speed to: %d", speed);
 		MotorsSetSpeed(0, speed);
 		chprintf(chp, " OK\r\n");
