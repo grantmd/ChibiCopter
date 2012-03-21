@@ -20,7 +20,7 @@
 
 // Public functions
 void SpektrumInit(void);
-int getChannelData(int channel);
+int getSpektrumData(int channel);
 
 // Private functions
 unsigned char _SpektrumParse(uint8_t c);

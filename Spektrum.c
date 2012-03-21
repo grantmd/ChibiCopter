@@ -72,7 +72,7 @@ void SpektrumInit(void){
  * Returns the most recent data for the given channel
  */
 
-int getChannelData(int channel){
+int getSpektrumData(int channel){
 	if (channel < 0 || channel >= MAX_RC_CHANNELS) return 0;
 
 	return receiver_data[channel];
