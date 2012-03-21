@@ -13,7 +13,7 @@
 #include "lis302dl.h"
 #include "chprintf.h"
 
-#include "comms.h"
+#include "Comms.h"
 #include "TinyGPS.h"
 #include "Motors.h"
 #include "Spektrum.h"
