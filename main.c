@@ -11,14 +11,11 @@
 #include "hal.h"
 
 #include "lis302dl.h"
-#include "chprintf.h"
 
 #include "Comms.h"
 #include "TinyGPS.h"
 #include "Motors.h"
 #include "Spektrum.h"
-
-BaseChannel *chp; // debugging serial port
 
 /*
  * SPI1 configuration structure.
@@ -79,9 +76,7 @@ static msg_t GPS(void *arg){
 		uint8_t c = chIOGet((BaseChannel *)&SD1);
 		if (TinyGPS_encode(c)){
 			newdata = 1;
-			//chprintf(chp, "Got GPS data.\r\n");
 		}
-		//chIOPut(chp, c);
 	}
 	return 0;
 }
@@ -107,29 +102,22 @@ int main(void){
 	 */
 
 	sdStart(&SD2, NULL);
-	chp = &SD2;
 	palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7)); // yellow wire on the FTDI cable
 	palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7)); // orange wire on the FTDI cable
-	chprintf(chp, "Hello, startup!\r\n");
-
-	chprintf(chp, "Configurating I/O.\r\n");
 
 	/*
 	 * Activates the serial driver 1 using the driver default configuration, but at 57600
 	 * PA9(TX) and PA10(RX) are routed to USART1.
 	 */
 
-	chprintf(chp, "GPS...");
 	sdStart(&SD1, &sd1cfg);
 	palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(7)); // not currently connected
 	palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(7)); // incoming data from the GPS
 	//TinyGPS_init();
-	chprintf(chp, "OK\r\n");
 
 	/*
 	 * SPI1 I/O pins setup.
 	 */
-	chprintf(chp, "SPI...");
 	/*
 	 * Initializes the SPI driver 1 in order to access the MEMS. The signals
 	 * are initialized in the board file.
@@ -139,32 +127,22 @@ int main(void){
 	lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG1, 0x43);
 	lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG2, 0x00);
 	lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG3, 0x00);
-	chprintf(chp, "OK\r\n");
 
 	/*
 	 * Receiver I/O
 	 */
-	chprintf(chp, "Receiver...");
 	SpektrumInit();
-	chprintf(chp, "OK\r\n");
 
 	/*
 	 * Motors I/O
 	 */
-	chprintf(chp, "Motors...");
 	MotorsInit();
-	chThdSleepMilliseconds(1000);
-	chprintf(chp, "OK\r\n");
-
-	chprintf(chp, "I/O configured.\r\n");
 
 	/*
 	 * Creates the threads
 	 */
-	chprintf(chp, "Launching threads...");
 	chThdCreateStatic(BlinkWA, sizeof(BlinkWA), NORMALPRIO, Blink, NULL);
 	chThdCreateStatic(GPSWA, sizeof(GPSWA), NORMALPRIO, GPS, NULL);
-	chprintf(chp, "OK\r\n");
 
 	/*
 	 * Normal main() thread activity
