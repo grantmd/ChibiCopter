@@ -169,7 +169,6 @@ int main(void){
 	 * Normal main() thread activity
 	 */
 
-	int speed = 0;
 	while (TRUE){
 		//chThdSleepMilliseconds(1000);
 
@@ -188,11 +187,6 @@ int main(void){
 		//chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
 		//MotorsSetSpeed(0, ReceiverGetThrottle());
 
-		chprintf(chp, "Setting motor speed to: %d", speed);
-		MotorsSetSpeed(0, speed);
-		chprintf(chp, " OK\r\n");
-		speed += 100;
-		if (speed > MAX_MOTOR_SPEED) speed = 0;
-		chThdSleepMilliseconds(1000);
+		MotorsSetSpeed(0, getSpektrumData(THROTTLE_CHANNEL));
 	}
 }
