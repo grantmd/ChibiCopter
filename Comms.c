@@ -14,14 +14,19 @@
 
 // Setup some mavlink vars
 mavlink_system_t mavlink_system;
+mavlink_status_t comms_status;
 
-mavlink_message_t comms_msg;
-uint8_t comms_buf[MAVLINK_MAX_PACKET_LEN];
+mavlink_message_t comms_msg_out;
+uint8_t comms_buf_out[MAVLINK_MAX_PACKET_LEN];
+
+mavlink_message_t comms_msg_in;
+
+static int comms_packet_drops = 0;
 
 // Setup some timers and callbacks
 static VirtualTimer vt_heartbeat;
 
-static void hb_interrupt(void *p) {
+static void hb_interrupt(void *p){
 
 	(void)p;
 
@@ -31,10 +36,30 @@ static void hb_interrupt(void *p) {
 	chSysUnlockFromIsr();
 }
 
-static void comms_rxchar(UARTDriver *uartp, uint16_t c) {
+static void comms_rxchar(UARTDriver *uartp, uint16_t c){
 
 	(void)uartp;
 	chSysLockFromIsr();
+
+	if (mavlink_parse_char(MAVLINK_COMM_0, c, &comms_msg_in, &comms_status)){
+		// Handle message
+
+		switch (comms_msg_in.msgid){
+			case MAVLINK_MSG_ID_HEARTBEAT:
+				// E.g. read GCS heartbeat and go into
+				// comm lost mode if timer times out
+				break;
+			case MAVLINK_MSG_ID_COMMAND_LONG:
+				// EXECUTE ACTION
+				break;
+			default:
+				//Do nothing
+				break;
+		}
+
+		// Update global packet drops counter
+		comms_packet_drops += comms_status.packet_rx_drop_count;
+	}
 
 	chSysUnlockFromIsr();
 }
@@ -82,9 +107,9 @@ void CommsInit(void){
 void CommsHeartbeat(void){
 
 	// Pack the message
-	mavlink_msg_heartbeat_pack(mavlink_system.sysid, mavlink_system.compid, &comms_msg, mavlink_system.type, mavlink_system.nav_mode, mavlink_system.mode, 0, mavlink_system.state);
+	mavlink_msg_heartbeat_pack(mavlink_system.sysid, mavlink_system.compid, &comms_msg_out, mavlink_system.type, mavlink_system.nav_mode, mavlink_system.mode, 0, mavlink_system.state);
 
 	// Copy the message to the send buffer
-	uint16_t len = mavlink_msg_to_send_buffer(comms_buf, &comms_msg);
-	uartStartSend(&UARTD2, len, comms_buf);
+	uint16_t len = mavlink_msg_to_send_buffer(comms_buf_out, &comms_msg_out);
+	uartStartSend(&UARTD2, len, comms_buf_out);
 }
