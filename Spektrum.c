@@ -10,7 +10,7 @@
 
 #include "Spektrum.h"
 
-static void rxchar(UARTDriver *uartp, uint16_t c) {
+static void spektrum_rxchar(UARTDriver *uartp, uint16_t c) {
 
 	(void)uartp;
 	chSysLockFromIsr();
@@ -24,7 +24,7 @@ static UARTConfig uart3cfg = {
 	NULL,
 	NULL,
 	NULL,
-	rxchar,
+	spektrum_rxchar,
 	NULL, // TODO: We may need this
 	115200,
 	0,

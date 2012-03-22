@@ -7,5 +7,8 @@
 
 #ifndef _COMMS_H_
 #define _COMMS_H_
+
+// Public functions
+void CommsInit(void);
     
 #endif /* _COMMS_H_ */
