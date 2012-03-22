@@ -10,5 +10,6 @@
 
 // Public functions
 void CommsInit(void);
+void CommsHeartbeat(void);
     
 #endif /* _COMMS_H_ */

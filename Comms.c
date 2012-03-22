@@ -12,11 +12,23 @@
 
 #include <mavlink.h>
 
+static VirtualTimer vt_heartbeat;
+
+static void hb_interrupt(void *p) {
+
+	(void)p;
+
+	chSysLockFromIsr();
+	CommsHeartbeat();
+	chVTSetI(&vt_heartbeat, MS2ST(1000), hb_interrupt, NULL);
+	chSysUnlockFromIsr();
+}
+
 static void comms_rxchar(UARTDriver *uartp, uint16_t c) {
 
 	(void)uartp;
 	chSysLockFromIsr();
-	
+
 	chSysUnlockFromIsr();
 }
 
@@ -43,4 +55,16 @@ void CommsInit(void){
 	uartStart(&UARTD2, &uart2cfg);
 	palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7)); // yellow wire on the FTDI cable
 	palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7)); // orange wire on the FTDI cable
+
+	// Schedule regular heartbeat
+	chVTSet(&vt_heartbeat, MS2ST(1000), hb_interrupt, NULL);
+}
+
+/*
+ * Sends a heartbeat message out, so everyone knows we're still alive
+ */
+
+void CommsHeartbeat(void){
+
+	//uartStartSend(&UARTD2, 13, "Starting...\r\n");
 }
