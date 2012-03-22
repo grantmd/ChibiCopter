@@ -128,7 +128,7 @@ int main(void){
 	/*
 	 * Receiver I/O
 	 */
-	SpektrumInit();
+	//SpektrumInit();
 
 	/*
 	 * Motors I/O
@@ -163,6 +163,6 @@ int main(void){
 		//chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
 		//MotorsSetSpeed(0, ReceiverGetThrottle());
 
-		MotorsSetSpeed(0, getSpektrumData(THROTTLE_CHANNEL));
+		//MotorsSetSpeed(0, getSpektrumData(THROTTLE_CHANNEL));
 	}
 }

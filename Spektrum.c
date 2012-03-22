@@ -13,9 +13,11 @@
 static void spektrum_rxchar(UARTDriver *uartp, uint16_t c) {
 
 	(void)uartp;
+
+	//palSetPad(GPIOD, GPIOD_LED5); // red
 	chSysLockFromIsr();
-	if (_SpektrumParse(c)){
-	}
+	//if (_SpektrumParse(c)){
+	//}
 	chSysUnlockFromIsr();
 }
 
@@ -134,12 +136,10 @@ long _SpektrumGetFrameNum(void){
 }
 
 void _SpektrumInvalidateFrame(void){
-	palClearPad(GPIOD, GPIOD_LED4); // green
 	rx_state.valid = 0;
 }
 
 void _SpektrumValidateFrame(void){
-	palSetPad(GPIOD, GPIOD_LED4); // green
 	rx_state.valid = 1;
 }
 

@@ -24,22 +24,37 @@ mavlink_message_t comms_msg_in;
 static int comms_packet_drops = 0;
 
 // Setup some timers and callbacks
-static VirtualTimer vt_heartbeat;
+static VirtualTimer vt_heartbeat, vt2, vt3;
+
+static void gledoff(void *p) {
+
+	(void)p;
+	palClearPad(GPIOD, GPIOD_LED4); // green
+}
+
+static void rledoff(void *p) {
+
+	(void)p;
+	palClearPad(GPIOD, GPIOD_LED5); // red
+}
 
 static void hb_interrupt(void *p){
 
 	(void)p;
+	palSetPad(GPIOD, GPIOD_LED4); // green
+	CommsHeartbeat();
 
 	chSysLockFromIsr();
-	CommsHeartbeat();
+	//uartStartSendI(&UARTD2, len, comms_buf_out);
 	chVTSetI(&vt_heartbeat, MS2ST(1000), hb_interrupt, NULL);
+	chVTSetI(&vt2, MS2ST(200), gledoff, NULL);
 	chSysUnlockFromIsr();
 }
 
 static void comms_rxchar(UARTDriver *uartp, uint16_t c){
 
 	(void)uartp;
-	chSysLockFromIsr();
+	palSetPad(GPIOD, GPIOD_LED5); // red
 
 	if (mavlink_parse_char(MAVLINK_COMM_0, c, &comms_msg_in, &comms_status)){
 		// Handle message
@@ -61,6 +76,10 @@ static void comms_rxchar(UARTDriver *uartp, uint16_t c){
 		comms_packet_drops += comms_status.packet_rx_drop_count;
 	}
 
+	chSysLockFromIsr();
+  	if (chVTIsArmedI(&vt3))
+    	chVTResetI(&vt3);
+	chVTSetI(&vt3, MS2ST(200), rledoff, NULL);
 	chSysUnlockFromIsr();
 }
 
@@ -110,6 +129,7 @@ void CommsHeartbeat(void){
 	mavlink_msg_heartbeat_pack(mavlink_system.sysid, mavlink_system.compid, &comms_msg_out, mavlink_system.type, mavlink_system.nav_mode, mavlink_system.mode, 0, mavlink_system.state);
 
 	// Copy the message to the send buffer
-	uint16_t len = mavlink_msg_to_send_buffer(comms_buf_out, &comms_msg_out);
-	uartStartSend(&UARTD2, len, comms_buf_out);
+	//uint16_t len = mavlink_msg_to_send_buffer(comms_buf_out, &comms_msg_out);
+	//uartStartSend(&UARTD2, len, comms_buf_out);
+	uartStartSend(&UARTD2, 14, "Hello World!\r\n");
 }
