@@ -162,10 +162,10 @@ CPPWARN = -Wall -Wextra
 #
 
 # List all default C defines here, like -D_DEBUG=1
-DDEFS =
+DDEFS = -D_DEBUG=1
 
 # List all default ASM defines here, like -D_DEBUG=1
-DADEFS =
+DADEFS = -D_DEBUG=1
 
 # List all default directories to look for include files here
 DINCDIR =
@@ -185,7 +185,7 @@ DLIBS =
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+UDEFS = -D_DEBUG=1
 
 # Define ASM defines here
 UADEFS =

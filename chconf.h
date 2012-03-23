@@ -361,7 +361,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_SYSTEM_STATE_CHECK) || defined(__DOXYGEN__)
-#define CH_DBG_SYSTEM_STATE_CHECK       FALSE
+#define CH_DBG_SYSTEM_STATE_CHECK       TRUE
 #endif
 
 /**
@@ -372,7 +372,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_ENABLE_CHECKS) || defined(__DOXYGEN__)
-#define CH_DBG_ENABLE_CHECKS            FALSE
+#define CH_DBG_ENABLE_CHECKS            TRUE
 #endif
 
 /**
@@ -384,7 +384,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_ENABLE_ASSERTS) || defined(__DOXYGEN__)
-#define CH_DBG_ENABLE_ASSERTS           FALSE
+#define CH_DBG_ENABLE_ASSERTS           TRUE
 #endif
 
 /**
@@ -395,7 +395,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_ENABLE_TRACE) || defined(__DOXYGEN__)
-#define CH_DBG_ENABLE_TRACE             FALSE
+#define CH_DBG_ENABLE_TRACE             TRUE
 #endif
 
 /**
@@ -530,7 +530,7 @@
 /* Port-specific settings (override port settings defaulted in chcore.h).    */
 /*===========================================================================*/
 
-#define CORTEX_USE_FPU                  FALSE
+#define CORTEX_USE_FPU                  TRUE
 
 #endif  /* _CHCONF_H_ */
 
