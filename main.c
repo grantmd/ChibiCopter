@@ -128,7 +128,7 @@ int main(void){
 	/*
 	 * Receiver I/O
 	 */
-	//SpektrumInit();
+	SpektrumInit();
 
 	/*
 	 * Motors I/O
@@ -146,7 +146,7 @@ int main(void){
 	 */
 
 	while (TRUE){
-		//chThdSleepMilliseconds(1000);
+		chThdSleepMilliseconds(1000);
 
 		//long lat, lon;
 		//unsigned long fix_age;
