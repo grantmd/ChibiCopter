@@ -10,24 +10,22 @@
 
 #include "Spektrum.h"
 
-static void spektrum_rxchar(UARTDriver *uartp, uint16_t c) {
+static WORKING_AREA(SPEKTRUMWA, 128);
+static msg_t Spektrum(void *arg){
 
-	(void)uartp;
-
-	//palSetPad(GPIOD, GPIOD_LED5); // red
-	chSysLockFromIsr();
-	//if (_SpektrumParse(c)){
-	//}
-	chSysUnlockFromIsr();
+	(void)arg;
+	chRegSetThreadName("Spektrum");
+	while (TRUE){
+		// Read a byte off the receiver
+		uint8_t c = chIOGet((BaseChannel *)&SD3);
+		if (_SpektrumParse(c)){
+		}
+	}
+	return 0;
 }
 
 // Our config for the serial connection to the RX
-static UARTConfig uart3cfg = {
-	NULL,
-	NULL,
-	NULL,
-	spektrum_rxchar,
-	NULL, // TODO: We may need this
+static SerialConfig sd3cfg = {
 	115200,
 	0,
 	USART_CR2_STOP1_BITS | USART_CR2_LINEN,
@@ -56,10 +54,10 @@ spektrum_t rx_state;
 
 void SpektrumInit(void){
 
-	uartStart(&UARTD3, &uart3cfg);
+	sdStart(&SD3, &sd3cfg);
 	palSetPadMode(GPIOD, 8, PAL_MODE_ALTERNATE(7)); // not currently connected
 	palSetPadMode(GPIOD, 9, PAL_MODE_ALTERNATE(7)); // incoming data from the receiver
-
+	
 	unsigned i;
 	for (i=0; i<MAX_RC_CHANNELS; i++){
 		receiver_data[i] = 0;
@@ -68,6 +66,8 @@ void SpektrumInit(void){
 	rx_state.state = 0;
 	rx_state.valid = 0;
 	rx_state.frameNum = 0L;
+
+	chThdCreateStatic(SPEKTRUMWA, sizeof(SPEKTRUMWA), NORMALPRIO, Spektrum, NULL);
 }
 
 /*
