@@ -14,18 +14,7 @@
 
 extern mavlink_system_t mavlink_system;
 
-/**
- * @brief Send buffer over a comm channel
- *
- * @param chan MAVLink channel to use, usually MAVLINK_COMM_0 = UART0
- * @param buf Data to send
- * @param len Length of data
- */
-static inline void comms_send_bytes(mavlink_channel_t chan, const uint8_t *buf, uint16_t len){
-	if (chan == MAVLINK_COMM_0){
-		chIOWriteTimeout(&SD2, buf, len, TIME_IMMEDIATE);
-	}
-}
+inline void comms_send_bytes(mavlink_channel_t chan, const uint8_t *buf, uint16_t len);
 #define MAVLINK_SEND_UART_BYTES(chan,buf,len) comms_send_bytes(chan, buf, len)
 
 // Public functions

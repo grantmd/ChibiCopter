@@ -91,3 +91,17 @@ void CommsInit(void){
 void CommsHeartbeat(void){
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, mavlink_system.type, mavlink_system.nav_mode,  mavlink_system.mode, 0, mavlink_system.state);
 }
+
+
+/**
+ * @brief Send buffer over a comm channel
+ *
+ * @param chan MAVLink channel to use, usually MAVLINK_COMM_0 = UART0
+ * @param buf Data to send
+ * @param len Length of data
+ */
+inline void comms_send_bytes(mavlink_channel_t chan, const uint8_t *buf, uint16_t len){
+	if (chan == MAVLINK_COMM_0){
+		chIOWriteTimeout(&SD2, buf, len, TIME_IMMEDIATE);
+	}
+}
