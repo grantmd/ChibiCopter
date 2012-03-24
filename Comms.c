@@ -13,6 +13,7 @@
 #include <mavlink.h>
 
 // Setup some mavlink vars
+mavlink_system_t mavlink_system;
 static mavlink_status_t comms_status;
 static mavlink_message_t comms_msg_in;
 static int comms_packet_drops = 0;

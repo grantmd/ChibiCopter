@@ -12,7 +12,7 @@
  
 #include "mavlink_types.h"
 
-static mavlink_system_t mavlink_system;
+extern mavlink_system_t mavlink_system;
 
 /**
  * @brief Send buffer over a comm channel

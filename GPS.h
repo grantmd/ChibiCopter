@@ -8,7 +8,7 @@
 #ifndef _GPS_H_
 #define _GPS_H_
 
-static EventSource gps_event;
+extern EventSource gps_event;
 
 // Public functions
 void GPSInit(void);

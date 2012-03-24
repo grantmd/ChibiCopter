@@ -10,6 +10,8 @@
 
 #include "Spektrum.h"
 
+EventSource spektrum_event;
+
 static WORKING_AREA(SPEKTRUMWA, 128);
 static msg_t Spektrum(void *arg){
 

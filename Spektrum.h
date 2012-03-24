@@ -18,7 +18,7 @@
 #define GEAR_CHANNEL 5
 #define AUX2_CHANNEL 6
 
-static EventSource spektrum_event;
+extern EventSource spektrum_event;
 
 // Public functions
 void SpektrumInit(void);

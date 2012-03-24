@@ -11,6 +11,8 @@
 #include "GPS.h"
 #include "TinyGPS.h"
 
+EventSource gps_event;
+
 /*
  * GPS setup
  */
