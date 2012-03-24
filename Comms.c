@@ -19,6 +19,12 @@ static mavlink_message_t comms_msg_in;
 static int comms_packet_drops = 0;
 
 // Setup some timers and callbacks
+static VirtualTimer vt1;
+static void ledoff(void *p) {
+
+	(void)p;
+	palClearPad(GPIOD, GPIOD_LED4);
+}
 
 static WORKING_AREA(COMMSWA, 128);
 static msg_t Comms(void *arg){
@@ -31,7 +37,6 @@ static msg_t Comms(void *arg){
 
 		if (mavlink_parse_char(MAVLINK_COMM_0, c, &comms_msg_in, &comms_status)){
 			// Handle message
-			palSetPad(GPIOD, GPIOD_LED4); // green
 
 			switch (comms_msg_in.msgid){
 				case MAVLINK_MSG_ID_HEARTBEAT:
@@ -89,7 +94,14 @@ void CommsInit(void){
  */
 
 void CommsHeartbeat(void){
+	palSetPad(GPIOD, GPIOD_LED4); // green
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, mavlink_system.type, mavlink_system.nav_mode,  mavlink_system.mode, 0, mavlink_system.state);
+
+	chSysLock();
+	if (chVTIsArmedI(&vt1))
+		chVTResetI(&vt1);
+	chVTSetI(&vt1, MS2ST(500), ledoff, NULL);
+	chSysUnlock();
 }
 
 
