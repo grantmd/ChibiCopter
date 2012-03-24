@@ -147,6 +147,7 @@ int main(void){
 
 	while (TRUE){
 		chThdSleepMilliseconds(1000);
+		CommsHeartbeat();
 
 		//long lat, lon;
 		//unsigned long fix_age;

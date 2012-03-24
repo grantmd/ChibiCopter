@@ -18,72 +18,42 @@ static mavlink_message_t comms_msg_in;
 static int comms_packet_drops = 0;
 
 // Setup some timers and callbacks
-static VirtualTimer vt_heartbeat, vt2, vt3;
 
-static void gledoff(void *p) {
+static WORKING_AREA(COMMSWA, 128);
+static msg_t Comms(void *arg){
 
-	(void)p;
-	palClearPad(GPIOD, GPIOD_LED4); // green
-}
+	(void)arg;
+	chRegSetThreadName("Comms");
+	while (TRUE){
+		// Read a byte off the receiver
+		uint8_t c = chIOGet((BaseChannel *)&SD2);
 
-static void rledoff(void *p) {
+		if (mavlink_parse_char(MAVLINK_COMM_0, c, &comms_msg_in, &comms_status)){
+			// Handle message
+			palSetPad(GPIOD, GPIOD_LED4); // green
 
-	(void)p;
-	palClearPad(GPIOD, GPIOD_LED5); // red
-}
+			switch (comms_msg_in.msgid){
+				case MAVLINK_MSG_ID_HEARTBEAT:
+					// E.g. read GCS heartbeat and go into
+					// comm lost mode if timer times out
+					break;
+				case MAVLINK_MSG_ID_COMMAND_LONG:
+					// EXECUTE ACTION
+					break;
+				default:
+					//Do nothing
+					break;
+			}
 
-static void hb_interrupt(void *p){
-
-	(void)p;
-	palSetPad(GPIOD, GPIOD_LED4); // green
-	//CommsHeartbeat();
-
-	chSysLockFromIsr();
-	//uartStartSendI(&UARTD2, len, comms_buf_out);
-	chVTSetI(&vt_heartbeat, MS2ST(1000), hb_interrupt, NULL);
-	chVTSetI(&vt2, MS2ST(200), gledoff, NULL);
-	chSysUnlockFromIsr();
-}
-
-static void comms_rxchar(UARTDriver *uartp, uint16_t c){
-
-	(void)uartp;
-	palSetPad(GPIOD, GPIOD_LED5); // red
-
-	if (mavlink_parse_char(MAVLINK_COMM_0, c, &comms_msg_in, &comms_status)){
-		// Handle message
-
-		switch (comms_msg_in.msgid){
-			case MAVLINK_MSG_ID_HEARTBEAT:
-				// E.g. read GCS heartbeat and go into
-				// comm lost mode if timer times out
-				break;
-			case MAVLINK_MSG_ID_COMMAND_LONG:
-				// EXECUTE ACTION
-				break;
-			default:
-				//Do nothing
-				break;
+			// Update global packet drops counter
+			comms_packet_drops += comms_status.packet_rx_drop_count;
 		}
-
-		// Update global packet drops counter
-		comms_packet_drops += comms_status.packet_rx_drop_count;
 	}
-
-	chSysLockFromIsr();
-  	if (chVTIsArmedI(&vt3))
-    	chVTResetI(&vt3);
-	chVTSetI(&vt3, MS2ST(200), rledoff, NULL);
-	chSysUnlockFromIsr();
+	return 0;
 }
 
 // Our config for the serial connection to the RX
-static UARTConfig uart2cfg = {
-	NULL,
-	NULL,
-	NULL,
-	comms_rxchar,
-	NULL, // TODO: We may need this
+static const SerialConfig sd2cfg = {
 	115200,
 	0,
 	USART_CR2_STOP1_BITS | USART_CR2_LINEN,
@@ -102,17 +72,15 @@ void CommsInit(void){
 	mavlink_system.compid = MAV_COMP_ID_IMU;
 	mavlink_system.type = MAV_TYPE_QUADROTOR;
 	mavlink_system.mode = MAV_MODE_PREFLIGHT;
-	mavlink_system.state = MAV_STATE_STANDBY;
+	mavlink_system.state = MAV_STATE_BOOT;
 	mavlink_system.nav_mode = MAV_AUTOPILOT_INVALID;
 
-	uartStart(&UARTD2, &uart2cfg);
+	sdStart(&SD2, &sd2cfg);
 	palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7)); // yellow wire on the FTDI cable
 	palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7)); // orange wire on the FTDI cable
 
-	// Schedule regular heartbeat
-	chVTSet(&vt_heartbeat, MS2ST(1000), hb_interrupt, NULL);
-
-	//CommsHeartbeat();
+	CommsHeartbeat();
+	chThdCreateStatic(COMMSWA, sizeof(COMMSWA), NORMALPRIO, Comms, NULL);
 }
 
 /*
