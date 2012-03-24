@@ -13,11 +13,11 @@
 #include <mavlink.h>
 
 // Setup some mavlink vars
-mavlink_system_t mavlink_system;
+//mavlink_system_t mavlink_system;
 mavlink_status_t comms_status;
 
-mavlink_message_t comms_msg_out;
-uint8_t comms_buf_out[MAVLINK_MAX_PACKET_LEN];
+//mavlink_message_t comms_msg_out;
+//uint8_t comms_buf_out[MAVLINK_MAX_PACKET_LEN];
 
 mavlink_message_t comms_msg_in;
 
@@ -42,7 +42,7 @@ static void hb_interrupt(void *p){
 
 	(void)p;
 	palSetPad(GPIOD, GPIOD_LED4); // green
-	CommsHeartbeat();
+	//CommsHeartbeat();
 
 	chSysLockFromIsr();
 	//uartStartSendI(&UARTD2, len, comms_buf_out);
@@ -104,7 +104,7 @@ static UARTConfig uart2cfg = {
 
 void CommsInit(void){
 
-	mavlink_system.sysid = 0;
+	mavlink_system.sysid = 1;
 	mavlink_system.compid = MAV_COMP_ID_IMU;
 	mavlink_system.type = MAV_TYPE_QUADROTOR;
 	mavlink_system.mode = MAV_MODE_PREFLIGHT;
@@ -117,6 +117,8 @@ void CommsInit(void){
 
 	// Schedule regular heartbeat
 	chVTSet(&vt_heartbeat, MS2ST(1000), hb_interrupt, NULL);
+
+	//CommsHeartbeat();
 }
 
 /*
@@ -124,12 +126,5 @@ void CommsInit(void){
  */
 
 void CommsHeartbeat(void){
-
-	// Pack the message
-	mavlink_msg_heartbeat_pack(mavlink_system.sysid, mavlink_system.compid, &comms_msg_out, mavlink_system.type, mavlink_system.nav_mode, mavlink_system.mode, 0, mavlink_system.state);
-
-	// Copy the message to the send buffer
-	//uint16_t len = mavlink_msg_to_send_buffer(comms_buf_out, &comms_msg_out);
-	//uartStartSend(&UARTD2, len, comms_buf_out);
-	uartStartSend(&UARTD2, 14, "Hello World!\r\n");
+	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, mavlink_system.type, mavlink_system.nav_mode,  mavlink_system.mode, 0, mavlink_system.state);
 }
