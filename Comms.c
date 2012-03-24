@@ -13,14 +13,8 @@
 #include <mavlink.h>
 
 // Setup some mavlink vars
-//mavlink_system_t mavlink_system;
-mavlink_status_t comms_status;
-
-//mavlink_message_t comms_msg_out;
-//uint8_t comms_buf_out[MAVLINK_MAX_PACKET_LEN];
-
-mavlink_message_t comms_msg_in;
-
+static mavlink_status_t comms_status;
+static mavlink_message_t comms_msg_in;
 static int comms_packet_drops = 0;
 
 // Setup some timers and callbacks
