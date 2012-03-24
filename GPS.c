@@ -27,11 +27,10 @@ static msg_t GPS(void *arg){
 	(void)arg;
 	chRegSetThreadName("GPS");
 	while (TRUE){
-		unsigned char newdata = 0;
 		// Read a byte off the GPS
 		uint8_t c = chIOGet((BaseChannel *)&SD1);
 		if (TinyGPS_encode(c)){
-			newdata = 1;
+			chEvtBroadcastI(&gps_event);
 		}
 	}
 	return 0;
@@ -47,6 +46,8 @@ void GPSInit(void){
 	sdStart(&SD1, &sd1cfg);
 	palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(7)); // not currently connected
 	palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(7)); // incoming data from the GPS
+
+	chEvtInit(&gps_event);
 
 	chThdCreateStatic(GPSWA, sizeof(GPSWA), NORMALPRIO, GPS, NULL);
 }

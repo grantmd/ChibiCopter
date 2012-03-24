@@ -19,6 +19,7 @@ static msg_t Spektrum(void *arg){
 		// Read a byte off the receiver
 		uint8_t c = chIOGet((BaseChannel *)&SD3);
 		if (_SpektrumParse(c)){
+			chEvtBroadcastI(&spektrum_event);
 		}
 	}
 	return 0;
@@ -66,6 +67,8 @@ void SpektrumInit(void){
 	rx_state.state = 0;
 	rx_state.valid = 0;
 	rx_state.frameNum = 0L;
+
+	chEvtInit(&spektrum_event);
 
 	chThdCreateStatic(SPEKTRUMWA, sizeof(SPEKTRUMWA), NORMALPRIO, Spektrum, NULL);
 }
