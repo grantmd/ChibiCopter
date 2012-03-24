@@ -5,8 +5,7 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  #USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16 -mhard-float -mfpu=fpv4-sp-d16 -fsingle-precision-constant
-  USE_OPT = -O0 -ggdb -fomit-frame-pointer -falign-functions=16 -mhard-float -mfpu=fpv4-sp-d16 -fsingle-precision-constant
+  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16 -mhard-float -mfpu=fpv4-sp-d16 -fsingle-precision-constant
 endif
 
 # C specific options here (added to USE_OPT).
@@ -164,10 +163,10 @@ CPPWARN = -Wall -Wextra
 #
 
 # List all default C defines here, like -D_DEBUG=1
-DDEFS = -D_DEBUG=1
+DDEFS =
 
 # List all default ASM defines here, like -D_DEBUG=1
-DADEFS = -D_DEBUG=1
+DADEFS =
 
 # List all default directories to look for include files here
 DINCDIR =
@@ -187,7 +186,7 @@ DLIBS =
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS = -D_DEBUG=1
+UDEFS =
 
 # Define ASM defines here
 UADEFS =
