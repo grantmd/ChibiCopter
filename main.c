@@ -16,6 +16,8 @@
 #include "Motors.h"
 #include "GPS.h"
 
+#include <mavlink.h>
+
 /*
  * This is a periodic thread that blinks some leds
  */
@@ -65,6 +67,7 @@ int main(void){
 	/*
 	 * Sensor I/O
 	 */
+	mavlink_system.state = MAV_STATE_CALIBRATING;
 	AccelInit();
 
 	/*
@@ -90,6 +93,9 @@ int main(void){
 	/*
 	 * Normal main() thread activity
 	 */
+
+	mavlink_system.state = MAV_STATE_STANDBY;
+	mavlink_system.mode = MAV_MODE_STABILIZE_DISARMED;
 
 	/*******************************************************************
 	  // tasks (microseconds of interval)
