@@ -79,11 +79,12 @@ CSRC = $(PORTSRC) \
        $(BOARDSRC) \
        $(CHIBIOS)/os/various/lis302dl.c \
        $(CHIBIOS)/os/various/chprintf.c \
-       comms.c \
+       Comms.c \
+       Accel.c \
+       Spektrum.c \
+       Motors.c \
        GPS.c \
        TinyGPS.c \
-       Motors.c \
-       Spektrum.c \
        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global

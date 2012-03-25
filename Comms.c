@@ -8,7 +8,7 @@
 #include "ch.h"
 #include "hal.h"
 
-#include "comms.h"
+#include "Comms.h"
 
 #include <mavlink.h>
 

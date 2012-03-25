@@ -10,25 +10,11 @@
 #include "ch.h"
 #include "hal.h"
 
-#include "lis302dl.h"
-
 #include "Comms.h"
-#include "GPS.h"
-#include "Motors.h"
+#include "Accel.h"
 #include "Spektrum.h"
-
-/*
- * SPI1 configuration structure.
- * Speed 5.25MHz, CPHA=1, CPOL=1, 8bits frames, MSb transmitted first.
- * The slave select line is the pin GPIOE_CS_SPI on the port GPIOE.
- */
-static const SPIConfig spi1cfg = {
-	NULL,
-	/* HW dependent part.*/
-	GPIOE,
-	GPIOE_CS_SPI,
-	SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_CPOL | SPI_CR1_CPHA
-};
+#include "Motors.h"
+#include "GPS.h"
 
 /*
  * This is a periodic thread that blinks some leds
@@ -77,14 +63,9 @@ int main(void){
 	CommsInit();
 
 	/*
-	 * Initializes the SPI driver 1 in order to access the MEMS. The signals
-	 * are initialized in the board file.
-	 * Several LIS302DL registers are then initialized.
+	 * Sensor I/O
 	 */
-	spiStart(&SPID1, &spi1cfg);
-	lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG1, 0x43);
-	lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG2, 0x00);
-	lis302dlWriteRegister(&SPID1, LIS302DL_CTRL_REG3, 0x00);
+	AccelInit();
 
 	/*
 	 * Receiver I/O
@@ -139,6 +120,7 @@ int main(void){
 			 * 100hz task loop
 	 		 */
 			if (frameCounter % 1 == 0){
+				AccelRead();
 			}
 
 			/*
