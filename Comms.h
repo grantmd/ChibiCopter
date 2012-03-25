@@ -19,6 +19,8 @@ inline void comms_send_bytes(mavlink_channel_t chan, const uint8_t *buf, uint16_
 
 // Public functions
 void CommsInit(void);
-void CommsHeartbeat(void);
+
+void CommsSendHeartbeat(void);
+void CommsSendSysStatus(void);
     
 #endif /* _COMMS_H_ */

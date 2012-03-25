@@ -146,13 +146,14 @@ int main(void){
 			 * 10hz task loop
 	 		 */
 			if (frameCounter % 10 == 0){
+				CommsSendSysStatus();
 			}
 
 			/*
 			 * 1hz task loop
 	 		 */
 			if (frameCounter % 100 == 0){
-				CommsHeartbeat();
+				CommsSendHeartbeat();
 			}
 
 			previousTime = currentTime;

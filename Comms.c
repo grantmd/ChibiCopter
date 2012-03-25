@@ -85,7 +85,7 @@ void CommsInit(void){
 	palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7)); // yellow wire on the FTDI cable
 	palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7)); // orange wire on the FTDI cable
 
-	CommsHeartbeat();
+	CommsSendHeartbeat();
 	chThdCreateStatic(COMMSWA, sizeof(COMMSWA), NORMALPRIO, Comms, NULL);
 }
 
@@ -93,7 +93,7 @@ void CommsInit(void){
  * Sends a heartbeat message out, so everyone knows we're still alive
  */
 
-void CommsHeartbeat(void){
+void CommsSendHeartbeat(void){
 	palSetPad(GPIOD, GPIOD_LED4); // green
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, mavlink_system.type, mavlink_system.nav_mode,  mavlink_system.mode, 0, mavlink_system.state);
 
@@ -102,6 +102,35 @@ void CommsHeartbeat(void){
 		chVTResetI(&vt1);
 	chVTSetI(&vt1, MS2ST(500), ledoff, NULL);
 	chSysUnlock();
+}
+
+/*
+ * Sends a system status message
+ */
+
+void CommsSendSysStatus(void){
+	// Indices: 
+	// 0: 3D gyro
+	// 1: 3D acc
+	// 2: 3D mag
+	// 3: absolute pressure
+	// 4: differential pressure
+	// 5: GPS
+	// 6: optical flow
+	// 7: computer vision position
+	// 8: laser based position
+	// 9: external ground-truth (Vicon or Leica)
+	// Controls:
+	// 10: 3D angular rate control
+	// 11: attitude stabilization
+	// 12: yaw position control
+	// 13: z/altitude control
+	// 14: x/y position control
+	// 15: motor outputs / control
+	uint32_t sensors_present = 0xFC23;
+	uint32_t sensors_enabled = sensors_present;
+
+	mavlink_msg_sys_status_send(MAVLINK_COMM_0, sensors_present, sensors_enabled, sensors_enabled, 0, 11100, -1, -1, comms_status.packet_rx_drop_count/comms_status.packet_rx_success_count*10000, comms_status.packet_rx_drop_count, 0, 0, 0, 0);
 }
 
 
