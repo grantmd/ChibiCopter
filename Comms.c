@@ -16,7 +16,7 @@
 mavlink_system_t mavlink_system;
 static mavlink_status_t comms_status;
 static mavlink_message_t comms_msg_in;
-static int comms_packet_drops = 0;
+static int comms_packet_drops, comms_packet_success = 0;
 
 // Setup some timers and callbacks
 static VirtualTimer vt1;
@@ -53,6 +53,7 @@ static msg_t Comms(void *arg){
 
 			// Update global packet drops counter
 			comms_packet_drops += comms_status.packet_rx_drop_count;
+			comms_packet_success += comms_status.packet_rx_success_count;
 		}
 	}
 	return 0;
@@ -130,7 +131,7 @@ void CommsSendSysStatus(void){
 	uint32_t sensors_present = 0xFC23;
 	uint32_t sensors_enabled = sensors_present;
 
-	mavlink_msg_sys_status_send(MAVLINK_COMM_0, sensors_present, sensors_enabled, sensors_enabled, 0, 11100, -1, -1, comms_status.packet_rx_drop_count/comms_status.packet_rx_success_count*10000, comms_status.packet_rx_drop_count, 0, 0, 0, 0);
+	mavlink_msg_sys_status_send(MAVLINK_COMM_0, sensors_present, sensors_enabled, sensors_enabled, 0, 11100, -1, -1, comms_packet_drops/comms_packet_success*10000, comms_packet_drops, 0, 0, 0, 0);
 }
 
 void CommsSendAttitude(uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed){
