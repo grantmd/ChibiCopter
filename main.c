@@ -77,9 +77,6 @@ int main(void){
 	CommsInit();
 
 	/*
-	 * SPI1 I/O pins setup.
-	 */
-	/*
 	 * Initializes the SPI driver 1 in order to access the MEMS. The signals
 	 * are initialized in the board file.
 	 * Several LIS302DL registers are then initialized.
@@ -113,25 +110,65 @@ int main(void){
 	 * Normal main() thread activity
 	 */
 
+	/*******************************************************************
+	  // tasks (microseconds of interval)
+	  ReadGyro        readGyro      (   5000); // 200hz
+	  ReadAccel       readAccel     (   5000); // 200hz
+	  RunDCM          runDCM        (  10000); // 100hz
+	  FlightControls  flightControls(  10000); // 100hz
+	  ReadReceiver    readReceiver  (  20000); //  50hz
+	  ReadBaro        readBaro      (  40000); //  25hz
+	  ReadCompass     readCompass   ( 100000); //  10Hz
+	  ProcessTelem    processTelem  ( 100000); //  10Hz
+	  ReadBattery     readBattery   ( 100000); //  10Hz
+	*******************************************************************/
+
+	systime_t previousTime = chTimeNow();
+	systime_t currentTime = 0;
+	systime_t deltaTime;
+	uint8_t frameCounter = 0;
 	while (TRUE){
-		chThdSleepMilliseconds(1000);
-		CommsHeartbeat();
+		currentTime = chTimeNow();
+  		deltaTime = currentTime - previousTime;
 
-		//long lat, lon;
-		//unsigned long fix_age;
-		//TinyGPS_get_position(&lat, &lon, &fix_age);
-		//chprintf(chp, "GPS location: %d, %d, %d\r\n", lat, lon, fix_age);
+  		// Main scheduler loop set for 100hz
+  		if (deltaTime >= US2ST(10000)){
+			frameCounter++;
 
-		//int year;
-		//char month, day, hour, minute, second, hundredths;
-		//TinyGPS_crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &fix_age);
-		//chprintf(chp, "GPS date/time: %d/%d/%d, %d:%d:%d.%d, %d\r\n", year, month, day, hour, minute, second, fix_age);
+			/*
+			 * 100hz task loop
+	 		 */
+			if (frameCounter % 1 == 0){
+			}
 
-		//chprintf(chp, "Motor: %d.\r\n", MotorsGetSpeed(0));
-		//chThdSleepMilliseconds(100);
-		//chprintf(chp, "Throttle: %d.\r\n", ReceiverGetThrottle());
-		//MotorsSetSpeed(0, ReceiverGetThrottle());
+			/*
+			 * 50hz task loop
+	 		 */
+			if (frameCounter % 2 == 0){
+				MotorsSetSpeed(0, getSpektrumData(THROTTLE_CHANNEL));
+			}
 
-		//MotorsSetSpeed(0, getSpektrumData(THROTTLE_CHANNEL));
+			/*
+			 * 25hz task loop
+	 		 */
+			if (frameCounter % 4 == 0){
+			}
+
+			/*
+			 * 10hz task loop
+	 		 */
+			if (frameCounter % 10 == 0){
+			}
+
+			/*
+			 * 1hz task loop
+	 		 */
+			if (frameCounter % 100 == 0){
+				CommsHeartbeat();
+			}
+
+			previousTime = currentTime;
+			if (frameCounter >= 100) frameCounter = 0;
+		}
 	}
 }
