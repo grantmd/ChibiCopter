@@ -22,5 +22,6 @@ void CommsInit(void);
 
 void CommsSendHeartbeat(void);
 void CommsSendSysStatus(void);
+void CommsSendAttitude(uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed);
     
 #endif /* _COMMS_H_ */

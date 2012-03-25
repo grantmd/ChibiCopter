@@ -133,6 +133,10 @@ void CommsSendSysStatus(void){
 	mavlink_msg_sys_status_send(MAVLINK_COMM_0, sensors_present, sensors_enabled, sensors_enabled, 0, 11100, -1, -1, comms_status.packet_rx_drop_count/comms_status.packet_rx_success_count*10000, comms_status.packet_rx_drop_count, 0, 0, 0, 0);
 }
 
+void CommsSendAttitude(uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed){
+	mavlink_msg_attitude_send(MAVLINK_COMM_0, time_boot_ms, roll, pitch, yaw, rollspeed, pitchspeed, yawspeed);
+}
+
 
 /**
  * @brief Send buffer over a comm channel
@@ -143,6 +147,6 @@ void CommsSendSysStatus(void){
  */
 inline void comms_send_bytes(mavlink_channel_t chan, const uint8_t *buf, uint16_t len){
 	if (chan == MAVLINK_COMM_0){
-		chIOWriteTimeout(&SD2, buf, len, TIME_IMMEDIATE);
+		chIOWriteTimeout(&SD2, buf, len, TIME_INFINITE);
 	}
 }

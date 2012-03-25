@@ -18,6 +18,8 @@
 
 #include <mavlink.h>
 
+#define ST2MS(st)   ((st / CH_FREQUENCY) * 1000L)
+
 /*
  * This is a periodic thread that blinks some leds
  */
@@ -57,6 +59,8 @@ int main(void){
 	 */
 	halInit();
 	chSysInit();
+
+	systime_t startTime = chTimeNow();
 
 	/*
 	 * Startup comms
@@ -146,13 +150,14 @@ int main(void){
 			 * 10hz task loop
 	 		 */
 			if (frameCounter % 10 == 0){
-				CommsSendSysStatus();
+				//CommsSendAttitude(ST2MS(currentTime - startTime), float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed);
 			}
 
 			/*
 			 * 1hz task loop
 	 		 */
 			if (frameCounter % 100 == 0){
+				CommsSendSysStatus();
 				CommsSendHeartbeat();
 			}
 
