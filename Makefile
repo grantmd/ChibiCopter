@@ -5,7 +5,8 @@
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16 -mhard-float -mfpu=fpv4-sp-d16 -fsingle-precision-constant
+  #USE_OPT = -O2 -ggdb -fomit-frame-pointer -falign-functions=16 -mhard-float -mfpu=fpv4-sp-d16 -fsingle-precision-constant
+  USE_OPT = -O2 -ggdb -fomit-frame-pointer
 endif
 
 # C specific options here (added to USE_OPT).
@@ -40,6 +41,11 @@ endif
 ##############################################################################
 # Architecture or project specific options
 #
+
+# Enables the use of FPU on Cortex-M4.
+ifeq ($(USE_FPU),)
+  USE_FPU = yes
+endif
 
 # Enable this if you really want to use the STM FWLib.
 ifeq ($(USE_FWLIB),)
@@ -164,19 +170,19 @@ CPPWARN = -Wall -Wextra
 #
 
 # List all default C defines here, like -D_DEBUG=1
-DDEFS =
+DDEFS = -D_DEBUG=1
 
 # List all default ASM defines here, like -D_DEBUG=1
-DADEFS =
+DADEFS = -D_DEBUG=1
 
 # List all default directories to look for include files here
-DINCDIR =
+DINCDIR = 
 
 # List the default directory to look for the libraries here
-DLIBDIR =
+DLIBDIR = 
 
 # List all default libraries here
-DLIBS =
+DLIBS = -lm
 
 #
 # End of default section
@@ -187,7 +193,7 @@ DLIBS =
 #
 
 # List all user C define here, like -D_DEBUG=1
-UDEFS =
+UDEFS = -D_DEBUG=1
 
 # Define ASM defines here
 UADEFS =
@@ -196,10 +202,17 @@ UADEFS =
 UINCDIR = ../mavlink/include ../mavlink/include/common
 
 # List the user directory to look for the libraries here
-ULIBDIR =
+ULIBDIR = 
 
 # List all user libraries here
 ULIBS =
+
+ifeq ($(USE_FPU),yes)
+  USE_OPT += -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -fsingle-precision-constant
+  DDEFS += -DCORTEX_USE_FPU=TRUE
+else
+  DDEFS += -DCORTEX_USE_FPU=FALSE
+endif
 
 #
 # End of user defines
