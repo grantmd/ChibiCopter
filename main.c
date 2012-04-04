@@ -150,7 +150,7 @@ int main(void){
 			 * 10hz task loop
 	 		 */
 			if (frameCounter % 10 == 0){
-				//CommsSendAttitude(ST2MS(currentTime - startTime), float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed);
+				CommsSendAttitude(ST2MS(currentTime - startTime), AccelGetRollAngle(), AccelGetPitchAngle(), AccelGetYawAngle(), 0, 0, 0);
 			}
 
 			/*

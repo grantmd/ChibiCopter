@@ -14,4 +14,8 @@ extern int8_t accel_x, accel_y, accel_z;
 void AccelInit(void);
 void AccelRead(void);
 
+float AccelGetRollAngle(void);
+float AccelGetPitchAngle(void);
+float AccelGetYawAngle(void);
+
 #endif /* _ACCEL_H_ */

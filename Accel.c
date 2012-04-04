@@ -5,6 +5,8 @@
     Read accelerometer data over SPI: the LIS302DL
 */
 
+#include <math.h>
+
 #include "ch.h"
 #include "hal.h"
 
@@ -45,4 +47,16 @@ void AccelRead(void){
     accel_x = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTX);
     accel_y = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTY);
     accel_z = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTZ);
+}
+
+float AccelGetRollAngle(void){
+	return atan2( accel_x, sqrt( pow(accel_y, 2) + pow(accel_z, 2) ) );
+}
+
+float AccelGetPitchAngle(void){
+	return atan2( accel_y, sqrt( pow(accel_x, 2) + pow(accel_z, 2) ) );
+}
+
+float AccelGetYawAngle(void){
+	return atan2( sqrt( pow(accel_x, 2) + pow(accel_y, 2) ), accel_z );
 }
