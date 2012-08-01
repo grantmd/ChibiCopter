@@ -19,7 +19,7 @@ static msg_t Spektrum(void *arg){
 	chRegSetThreadName("Spektrum");
 	while (TRUE){
 		// Read a byte off the receiver
-		uint8_t c = chIOGet((BaseChannel *)&SD3);
+		uint8_t c = chnGetTimeout((BaseChannel *)&SD3, TIME_INFINITE);
 		if (_SpektrumParse(c)){
 			chEvtBroadcastI(&spektrum_event);
 		}

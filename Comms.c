@@ -33,7 +33,7 @@ static msg_t Comms(void *arg){
 	chRegSetThreadName("Comms");
 	while (TRUE){
 		// Read a byte off the receiver
-		uint8_t c = chIOGet((BaseChannel *)&SD2);
+		uint8_t c = chnGetTimeout((BaseChannel *)&SD2, TIME_INFINITE);
 
 		if (mavlink_parse_char(MAVLINK_COMM_0, c, &comms_msg_in, &comms_status)){
 			// Handle message
@@ -148,6 +148,6 @@ void CommsSendAttitude(uint32_t time_boot_ms, float roll, float pitch, float yaw
  */
 inline void comms_send_bytes(mavlink_channel_t chan, const uint8_t *buf, uint16_t len){
 	if (chan == MAVLINK_COMM_0){
-		chIOWriteTimeout(&SD2, buf, len, TIME_INFINITE);
+		chnWriteTimeout(&SD2, buf, len, TIME_INFINITE);
 	}
 }

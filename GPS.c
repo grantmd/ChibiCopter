@@ -30,7 +30,7 @@ static msg_t GPS(void *arg){
 	chRegSetThreadName("GPS");
 	while (TRUE){
 		// Read a byte off the GPS
-		uint8_t c = chIOGet((BaseChannel *)&SD1);
+		uint8_t c = chnGetTimeout((BaseChannel *)&SD1, TIME_INFINITE);
 		if (TinyGPS_encode(c)){
 			chEvtBroadcastI(&gps_event);
 		}
