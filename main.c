@@ -118,6 +118,9 @@ int main(void){
 	systime_t currentTime = 0;
 	systime_t deltaTime;
 	uint8_t frameCounter = 0;
+
+	float accelRoll, accelPitch, accelYaw = 0.0;
+
 	while (TRUE){
 		currentTime = chTimeNow();
   		deltaTime = currentTime - previousTime;
@@ -150,7 +153,10 @@ int main(void){
 			 * 10hz task loop
 	 		 */
 			if (frameCounter % 10 == 0){
-				CommsSendAttitude(ST2MS(currentTime - startTime), AccelGetRollAngle(), AccelGetPitchAngle(), AccelGetYawAngle(), 0, 0, 0);
+				//accelRoll = AccelGetRollAngle();
+				//accelPitch = AccelGetPitchAngle();
+				//accelYaw = AccelGetYawAngle();
+				CommsSendAttitude(ST2MS(currentTime - startTime), accelRoll, accelPitch, accelYaw, 0, 0, 0);
 			}
 
 			/*
