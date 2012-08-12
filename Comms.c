@@ -23,7 +23,7 @@ static VirtualTimer vt1;
 static void ledoff(void *p) {
 
 	(void)p;
-	palClearPad(GPIOD, GPIOD_LED4);
+	palClearPad(GPIOD, GPIOD_LED4); // green
 }
 
 static WORKING_AREA(COMMSWA, 128);
