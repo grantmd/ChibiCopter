@@ -8,7 +8,7 @@
 #ifndef _ACCEL_H_
 #define _ACCEL_H_
 
-extern int8_t accel_x, accel_y, accel_z;
+extern uint8_t accel_x, accel_y, accel_z;
 
 // Public functions
 void AccelInit(void);

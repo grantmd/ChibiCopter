@@ -5,8 +5,6 @@
     Read accelerometer data over SPI: the LIS302DL
 */
 
-#include <math.h>
-
 #include "ch.h"
 #include "hal.h"
 
@@ -14,7 +12,9 @@
 
 #include "Accel.h"
 
-int8_t accel_x, accel_y, accel_z;
+#include <math.h>
+
+uint8_t accel_x, accel_y, accel_z;
 
 /*
  * SPI1 configuration structure.
@@ -44,19 +44,19 @@ void AccelInit(void){
 
 void AccelRead(void){
 
-    accel_x = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTX);
-    accel_y = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTY);
-    accel_z = (int8_t)lis302dlReadRegister(&SPID1, LIS302DL_OUTZ);
+    accel_x = lis302dlReadRegister(&SPID1, LIS302DL_OUTX);
+    accel_y = lis302dlReadRegister(&SPID1, LIS302DL_OUTY);
+    accel_z = lis302dlReadRegister(&SPID1, LIS302DL_OUTZ);
 }
 
 float AccelGetRollAngle(void){
-	return atan2( accel_x, sqrt( pow(accel_y, 2) + pow(accel_z, 2) ) );
+	return atan2f( (float)accel_x, (float)sqrt( pow(accel_y, 2) + pow(accel_z, 2) ) );
 }
 
 float AccelGetPitchAngle(void){
-	return atan2( accel_y, sqrt( pow(accel_x, 2) + pow(accel_z, 2) ) );
+	return atan2f( (float)accel_y, (float)sqrt( pow(accel_x, 2) + pow(accel_z, 2) ) );
 }
 
 float AccelGetYawAngle(void){
-	return atan2( sqrt( pow(accel_x, 2) + pow(accel_y, 2) ), accel_z );
+	return atan2f( (float)sqrt( pow(accel_x, 2) + pow(accel_y, 2) ), (float)accel_z );
 }
