@@ -10,6 +10,8 @@
 #include "ch.h"
 #include "hal.h"
 
+#include "usb_cdc.h"
+
 #include "Comms.h"
 #include "Accel.h"
 #include "Spektrum.h"
