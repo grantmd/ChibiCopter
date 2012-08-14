@@ -26,6 +26,13 @@ static void ledoff(void *p) {
 	palClearPad(GPIOD, GPIOD_LED4); // green
 }
 
+static VirtualTimer vt2;
+static void led2off(void *p) {
+
+  (void)p;
+  palClearPad(GPIOD, GPIOD_LED5); // red
+}
+
 static WORKING_AREA(COMMSWA, 128);
 static msg_t Comms(void *arg){
 
@@ -36,6 +43,8 @@ static msg_t Comms(void *arg){
 		uint8_t c = chnGetTimeout((BaseChannel *)&SD2, TIME_INFINITE);
 
 		if (mavlink_parse_char(MAVLINK_COMM_0, c, &comms_msg_in, &comms_status)){
+      palSetPad(GPIOD, GPIOD_LED5); // red
+
 			// Handle message
 
 			switch (comms_msg_in.msgid){
@@ -54,6 +63,13 @@ static msg_t Comms(void *arg){
 			// Update global packet drops counter
 			comms_packet_drops += comms_status.packet_rx_drop_count;
 			comms_packet_success += comms_status.packet_rx_success_count;
+
+      // Set a timer to turn off the red led
+      chSysLock();
+      if (chVTIsArmedI(&vt2))
+        chVTResetI(&vt2);
+      chVTSetI(&vt2, MS2ST(500), led2off, NULL);
+      chSysUnlock();
 		}
 	}
 	return 0;
