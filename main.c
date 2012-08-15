@@ -119,7 +119,9 @@ int main(void){
 	systime_t deltaTime;
 	uint8_t frameCounter = 0;
 
-	float accelRoll, accelPitch, accelYaw = 0.0;
+	float accelRoll = 0.0;
+	float accelPitch = 0.0;
+	float accelYaw = 0.0;
 
 	while (TRUE){
 		currentTime = chTimeNow();
