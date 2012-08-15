@@ -161,8 +161,8 @@ int main(void){
 	 		 */
 			if (frameCounter % 10 == 0){
 				accelRoll = AccelGetRollAngle();
-				//accelPitch = AccelGetPitchAngle();
-				//accelYaw = AccelGetYawAngle();
+				accelPitch = AccelGetPitchAngle();
+				accelYaw = AccelGetYawAngle();
 				CommsSendAttitude(ST2MS(currentTime - startTime), accelRoll, accelPitch, accelYaw, 0, 0, 0);
 			}
 

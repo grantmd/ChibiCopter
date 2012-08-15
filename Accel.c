@@ -51,14 +51,13 @@ void AccelRead(void){
 }
 
 float AccelGetRollAngle(void){
-	return atan2f( (float)accel_x, nr_sqrt( accel_y ) );
-	//return atan2f( (float)accel_x, nr_sqrt( pow(accel_y, 2) + pow(accel_z, 2) ) );
+	return atan2f( (float)accel_x, nr_sqrt( (accel_y*accel_y) + (accel_z*accel_z) ) );
 }
 
 float AccelGetPitchAngle(void){
-	return atan2f( (float)accel_y, nr_sqrt( pow(accel_x, 2) + pow(accel_z, 2) ) );
+	return atan2f( (float)accel_y, nr_sqrt( (accel_x*accel_x) + (accel_z*accel_z) ) );
 }
 
 float AccelGetYawAngle(void){
-	return atan2f( nr_sqrt( pow(accel_x, 2) + pow(accel_y, 2) ), (float)accel_z );
+	return atan2f( nr_sqrt( (accel_x*accel_x) + (accel_y*accel_y) ), (float)accel_z );
 }
