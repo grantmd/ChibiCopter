@@ -10,6 +10,7 @@
 
 #include "lis302dl.h"
 
+#include "Utils.h"
 #include "Accel.h"
 
 #include <math.h>
@@ -50,13 +51,14 @@ void AccelRead(void){
 }
 
 float AccelGetRollAngle(void){
-	return atan2f( (float)accel_x, (float)sqrt( pow(accel_y, 2) + pow(accel_z, 2) ) );
+	return atan2f( (float)accel_x, nr_sqrt( accel_y ) );
+	//return atan2f( (float)accel_x, nr_sqrt( pow(accel_y, 2) + pow(accel_z, 2) ) );
 }
 
 float AccelGetPitchAngle(void){
-	return atan2f( (float)accel_y, (float)sqrt( pow(accel_x, 2) + pow(accel_z, 2) ) );
+	return atan2f( (float)accel_y, nr_sqrt( pow(accel_x, 2) + pow(accel_z, 2) ) );
 }
 
 float AccelGetYawAngle(void){
-	return atan2f( (float)sqrt( pow(accel_x, 2) + pow(accel_y, 2) ), (float)accel_z );
+	return atan2f( nr_sqrt( pow(accel_x, 2) + pow(accel_y, 2) ), (float)accel_z );
 }

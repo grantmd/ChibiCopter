@@ -160,7 +160,7 @@ int main(void){
 			 * 10hz task loop
 	 		 */
 			if (frameCounter % 10 == 0){
-				//accelRoll = AccelGetRollAngle();
+				accelRoll = AccelGetRollAngle();
 				//accelPitch = AccelGetPitchAngle();
 				//accelYaw = AccelGetYawAngle();
 				CommsSendAttitude(ST2MS(currentTime - startTime), accelRoll, accelPitch, accelYaw, 0, 0, 0);
