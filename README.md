@@ -15,3 +15,10 @@ Requirements
 
 * A copy of chibios in ../chibios
 * A copy of mavlink in ../mavlink (you will need to build the C message types)
+
+Notes
+-----
+
+* A listing of the pins on my STM32FDISCOVERY board, and what I'm mapping them to: https://docs.google.com/spreadsheet/ccc?key=0AkLgoXdu_mAhdE9oV3J5ODFaWEhoT1pUTXRFYXluSUE
+* chibios: http://www.chibios.org/
+* mavlink: http://qgroundcontrol.org/mavlink/start
