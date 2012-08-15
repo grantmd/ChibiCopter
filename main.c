@@ -12,6 +12,7 @@
 
 #include "Comms.h"
 #include "Accel.h"
+#include "Gyro.h"
 #include "Spektrum.h"
 #include "Motors.h"
 #include "GPS.h"
@@ -73,6 +74,7 @@ int main(void){
 	 */
 	mavlink_system.state = MAV_STATE_CALIBRATING;
 	AccelInit();
+	GyroInit();
 
 	/*
 	 * Receiver I/O
@@ -135,6 +137,7 @@ int main(void){
 			 * 100hz task loop
 	 		 */
 			if (frameCounter % 1 == 0){
+				GyroRead();
 				AccelRead();
 			}
 

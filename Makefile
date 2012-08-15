@@ -87,6 +87,7 @@ CSRC = $(PORTSRC) \
        $(CHIBIOS)/os/various/chprintf.c \
        Comms.c \
        Accel.c \
+       Gyro.c \
        Spektrum.c \
        Motors.c \
        GPS.c \
