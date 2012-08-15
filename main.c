@@ -11,6 +11,7 @@
 #include "hal.h"
 
 #include "Comms.h"
+#include "I2CSensor.h"
 #include "Accel.h"
 #include "Gyro.h"
 #include "Spektrum.h"
@@ -73,6 +74,7 @@ int main(void){
 	 * Sensor I/O
 	 */
 	mavlink_system.state = MAV_STATE_CALIBRATING;
+	I2CSensorInit();
 	AccelInit();
 	GyroInit();
 

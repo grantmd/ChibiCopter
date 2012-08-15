@@ -86,6 +86,7 @@ CSRC = $(PORTSRC) \
        $(CHIBIOS)/os/various/devices_lib/accel/lis302dl.c \
        $(CHIBIOS)/os/various/chprintf.c \
        Comms.c \
+       I2CSensor.c \
        Accel.c \
        Gyro.c \
        Spektrum.c \
