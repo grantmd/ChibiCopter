@@ -24,6 +24,15 @@
 #define ST2MS(st)   ((st / CH_FREQUENCY) * 1000L)
 
 /*
+ * Define mailboxes
+ */
+#define MAILBOX_SIZE 128
+static Mailbox GPSmb;
+static Mailbox Receivermb;
+static msg_t GPSMessage[MAILBOX_SIZE];
+static msg_t ReceiverMessage[MAILBOX_SIZE];
+
+/*
  * This is a periodic thread that blinks some leds
  */
 static WORKING_AREA(BlinkWA, 128);
@@ -64,6 +73,12 @@ int main(void){
 	chSysInit();
 
 	systime_t startTime = chTimeNow();
+
+	/*
+	 * Init mailboxes
+	 */
+	chMBInit(&GPSmb, GPSMessage, MAILBOX_SIZE);
+	chMBInit(&Receivermb, ReceiverMessage, MAILBOX_SIZE);
 
 	/*
 	 * Startup comms
