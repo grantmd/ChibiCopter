@@ -21,7 +21,7 @@ static msg_t Spektrum(void *arg){
 		// Read a byte off the receiver
 		uint8_t c = chnGetTimeout((BaseChannel *)&SD3, TIME_INFINITE);
 		if (_SpektrumParse(c)){
-			chEvtBroadcastI(&spektrum_event);
+			chEvtBroadcast(&spektrum_event);
 		}
 	}
 	return 0;

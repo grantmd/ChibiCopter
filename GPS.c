@@ -42,14 +42,15 @@ static msg_t GPS(void *arg){
 		if (TinyGPS_encode(c)){
       		palSetPad(GPIOD, GPIOD_LED5); // red
 
-			chEvtBroadcastI(&gps_event);
+			chEvtBroadcast(&gps_event);
 
 			// Set a timer to turn off the red led
-			chSysLock();
+			/*chSysLock();
 			if (chVTIsArmedI(&vt2))
 				chVTResetI(&vt2);
 			chVTSetI(&vt2, MS2ST(500), led2off, NULL);
 			chSysUnlock();
+			*/
 		}
 	}
 	return 0;
