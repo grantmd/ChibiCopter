@@ -181,6 +181,8 @@ int main(void){
 			 * 5hz task loop
 			 */
 			if (frameCounter % 20 == 0){
+				// GPS data is read in a separate thread, and here we assume it is ready and we can use it
+				// My GPS advertises a 5hz rate, so that's how often we send it back over mavlink
 				TinyGPS_get_position((int32_t*)latitude, (int32_t*)longitude, (uint32_t*)fixAge);
 				altitude = TinyGPS_altitude()*10;
 				velocity = TinyGPS_f_speed_mps()*100;
