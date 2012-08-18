@@ -11,6 +11,8 @@
 #include "GPS.h"
 #include "TinyGPS.h"
 
+#include "Comms.h"
+
 EventSource gps_event;
 
 // Setup some timers and callbacks

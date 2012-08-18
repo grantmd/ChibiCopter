@@ -16,6 +16,7 @@
 #include "Gyro.h"
 #include "Spektrum.h"
 #include "Motors.h"
+#include "TinyGPS.h"
 #include "GPS.h"
 
 #include <mavlink.h>
@@ -107,15 +108,17 @@ int main(void){
 
 	/*******************************************************************
 	  // tasks (microseconds of interval)
-	  ReadGyro        readGyro      (   5000); // 200hz
-	  ReadAccel       readAccel     (   5000); // 200hz
-	  RunDCM          runDCM        (  10000); // 100hz
-	  FlightControls  flightControls(  10000); // 100hz
-	  ReadReceiver    readReceiver  (  20000); //  50hz
-	  ReadBaro        readBaro      (  40000); //  25hz
-	  ReadCompass     readCompass   ( 100000); //  10Hz
-	  ProcessTelem    processTelem  ( 100000); //  10Hz
-	  ReadBattery     readBattery   ( 100000); //  10Hz
+	  ReadGyro        (   5000); // 200hz
+	  ReadAccel       (   5000); // 200hz
+	  RunDCM          (  10000); // 100hz
+	  FlightControls  (  10000); // 100hz
+	  ReadReceiver    (  20000); //  50hz
+	  ReadBaro        (  40000); //  25hz
+	  ReadCompass     ( 100000); //  10Hz
+	  ProcessTelem    ( 100000); //  10Hz
+	  ReadBattery     ( 100000); //  10Hz
+	  ProcessGPS      ( 200000); //   5Hz
+	  Heartbeats      (1000000); //   1Hz
 	*******************************************************************/
 
 	systime_t previousTime = chTimeNow();
@@ -126,6 +129,14 @@ int main(void){
 	float accelRoll = 0.0;
 	float accelPitch = 0.0;
 	float accelYaw = 0.0;
+
+	uint8_t gpsFixType = 0;
+	uint32_t fixAge = 0;
+	int32_t latitude = 0;
+	int32_t longitude = 0;
+	int32_t altitude = 0;
+	uint16_t velocity = 0;
+	uint16_t cog = 0;
 
 	while (TRUE){
 		currentTime = chTimeNow();
@@ -164,6 +175,21 @@ int main(void){
 				accelPitch = AccelGetPitchAngle();
 				accelYaw = AccelGetYawAngle();
 				CommsSendAttitude(ST2MS(currentTime - startTime), accelRoll, accelPitch, accelYaw, 0, 0, 0);
+			}
+
+			/*
+			 * 5hz task loop
+			 */
+			if (frameCounter % 20 == 0){
+				TinyGPS_get_position((int32_t*)latitude, (int32_t*)longitude, (uint32_t*)fixAge);
+				altitude = TinyGPS_altitude()*10;
+				velocity = TinyGPS_f_speed_mps()*100;
+				cog = TinyGPS_f_course()*100;
+
+				gpsFixType = 0;
+				if (fixAge != GPS_INVALID_AGE) gpsFixType = 3;
+
+				CommsSendGPSRaw(ST2MS(currentTime - startTime), gpsFixType, latitude, longitude, altitude, 65535, 65535, velocity, cog, 255);
 			}
 
 			/*

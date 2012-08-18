@@ -23,5 +23,6 @@ void CommsInit(void);
 void CommsSendHeartbeat(void);
 void CommsSendSysStatus(void);
 void CommsSendAttitude(uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed);
+void CommsSendGPSRaw(uint64_t time_usec, uint8_t fix_type, int32_t lat, int32_t lon, int32_t alt, uint16_t eph, uint16_t epv, uint16_t vel, uint16_t cog, uint8_t satellites_visible);
     
 #endif /* _COMMS_H_ */

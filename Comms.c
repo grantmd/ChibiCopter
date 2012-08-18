@@ -135,8 +135,14 @@ void CommsSendSysStatus(void){
 	mavlink_msg_sys_status_send(MAVLINK_COMM_0, sensors_present, sensors_enabled, sensors_enabled, 0, 11100, -1, -1, comms_packet_drops/comms_packet_success*10000, comms_packet_drops, 0, 0, 0, 0);
 }
 
+// https://pixhawk.ethz.ch/mavlink/#ATTITUDE
 void CommsSendAttitude(uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed){
 	mavlink_msg_attitude_send(MAVLINK_COMM_0, time_boot_ms, roll, pitch, yaw, rollspeed, pitchspeed, yawspeed);
+}
+
+// https://pixhawk.ethz.ch/mavlink/#GPS_RAW_INT
+void CommsSendGPSRaw(uint64_t time_usec, uint8_t fix_type, int32_t lat, int32_t lon, int32_t alt, uint16_t eph, uint16_t epv, uint16_t vel, uint16_t cog, uint8_t satellites_visible){
+  mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0, time_usec, fix_type, lat, lon, alt, eph, epv, vel, cog, satellites_visible);
 }
 
 
