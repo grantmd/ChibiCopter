@@ -10,7 +10,6 @@
 
 #include "Spektrum.h"
 
-EventSource spektrum_event;
 
 static WORKING_AREA(SPEKTRUMWA, 128);
 static msg_t Spektrum(void *arg){
@@ -21,7 +20,6 @@ static msg_t Spektrum(void *arg){
 		// Read a byte off the receiver
 		uint8_t c = chnGetTimeout((BaseChannel *)&SD3, TIME_INFINITE);
 		if (_SpektrumParse(c)){
-			chEvtBroadcast(&spektrum_event);
 		}
 	}
 	return 0;
@@ -69,8 +67,6 @@ void SpektrumInit(void){
 	rx_state.state = 0;
 	rx_state.valid = 0;
 	rx_state.frameNum = 0L;
-
-	chEvtInit(&spektrum_event);
 
 	chThdCreateStatic(SPEKTRUMWA, sizeof(SPEKTRUMWA), NORMALPRIO, Spektrum, NULL);
 }

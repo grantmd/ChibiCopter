@@ -13,16 +13,6 @@
 
 #include "Comms.h"
 
-EventSource gps_event;
-
-// Setup some timers and callbacks
-static VirtualTimer vt2;
-static void led2off(void *p) {
-
-  (void)p;
-  palClearPad(GPIOD, GPIOD_LED5); // red
-}
-
 /*
  * GPS setup
  */
@@ -43,16 +33,6 @@ static msg_t GPS(void *arg){
 		uint8_t c = chnGetTimeout((BaseChannel *)&SD1, TIME_INFINITE);
 		if (TinyGPS_encode(c)){
       		palSetPad(GPIOD, GPIOD_LED5); // red
-
-			chEvtBroadcast(&gps_event);
-
-			// Set a timer to turn off the red led
-			/*chSysLock();
-			if (chVTIsArmedI(&vt2))
-				chVTResetI(&vt2);
-			chVTSetI(&vt2, MS2ST(500), led2off, NULL);
-			chSysUnlock();
-			*/
 		}
 	}
 	return 0;
@@ -68,8 +48,6 @@ void GPSInit(void){
 	sdStart(&SD1, &sd1cfg);
 	palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(7)); // not currently connected
 	palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(7)); // incoming data from the GPS
-
-	chEvtInit(&gps_event);
 
 	chThdCreateStatic(GPSWA, sizeof(GPSWA), NORMALPRIO, GPS, NULL);
 }
