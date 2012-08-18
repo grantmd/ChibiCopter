@@ -94,7 +94,7 @@ int getSpektrumData(int channel){
  * Returns whether or not the frame is now complete and valid 
  */
 
-// Mostly borred from: http://mbed.org/users/offroad/libraries/spektRx/lzmwp4/docs/spektRx_8c_source.html
+// Mostly borrowed from: http://mbed.org/users/offroad/libraries/spektRx/lzmwp4/docs/spektRx_8c_source.html
 unsigned char _SpektrumParse(uint8_t c){
 	switch(rx_state.state){
 		case 0: /* new frame cycle */
