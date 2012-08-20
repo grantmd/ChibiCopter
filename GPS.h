@@ -8,7 +8,9 @@
 #ifndef _GPS_H_
 #define _GPS_H_
 
-extern EventSource gps_event;
+#define GPS_MAILBOX_SIZE 128
+extern Mailbox GPSmb;
+extern msg_t GPSMessage[GPS_MAILBOX_SIZE];
 
 // Public functions
 void GPSInit(void);

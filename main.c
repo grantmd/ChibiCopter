@@ -27,9 +27,7 @@
  * Define mailboxes
  */
 #define MAILBOX_SIZE 128
-static Mailbox GPSmb;
 static Mailbox Receivermb;
-static msg_t GPSMessage[MAILBOX_SIZE];
 static msg_t ReceiverMessage[MAILBOX_SIZE];
 
 /*
@@ -77,7 +75,6 @@ int main(void){
 	/*
 	 * Init mailboxes
 	 */
-	chMBInit(&GPSmb, GPSMessage, MAILBOX_SIZE);
 	chMBInit(&Receivermb, ReceiverMessage, MAILBOX_SIZE);
 
 	/*
@@ -158,6 +155,7 @@ int main(void){
   		deltaTime = currentTime - previousTime;
 
   		// Main scheduler loop set for 100hz
+  		// TODO: Use sleep until to have the thread sleep until 100hz
   		if (deltaTime >= US2ST(10000)){
 			frameCounter++;
 

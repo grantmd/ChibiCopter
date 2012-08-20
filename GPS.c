@@ -11,7 +11,8 @@
 #include "GPS.h"
 #include "TinyGPS.h"
 
-#include "Comms.h"
+Mailbox GPSmb;
+msg_t GPSMessage[GPS_MAILBOX_SIZE];
 
 /*
  * GPS setup
@@ -28,11 +29,16 @@ static msg_t GPS(void *arg){
 
 	(void)arg;
 	chRegSetThreadName("GPS");
+
+	msg_t msg;
 	while (TRUE){
 		// Read a byte off the GPS
 		uint8_t c = chnGetTimeout((BaseChannel *)&SD1, TIME_INFINITE);
 		if (TinyGPS_encode(c)){
       		palSetPad(GPIOD, GPIOD_LED5); // red
+
+      		// Post a message
+      		chMBPost(&GPSmb, msg, TIME_IMMEDIATE);
 		}
 	}
 	return 0;
@@ -48,6 +54,8 @@ void GPSInit(void){
 	sdStart(&SD1, &sd1cfg);
 	palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(7)); // not currently connected
 	palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(7)); // incoming data from the GPS
+
+	chMBInit(&GPSmb, GPSMessage, GPS_MAILBOX_SIZE);
 
 	chThdCreateStatic(GPSWA, sizeof(GPSWA), NORMALPRIO, GPS, NULL);
 }

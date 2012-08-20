@@ -97,7 +97,7 @@ void CommsInit(void){
 
 void CommsSendHeartbeat(void){
 	palSetPad(GPIOD, GPIOD_LED4); // green
-	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, mavlink_system.type, mavlink_system.nav_mode,  mavlink_system.mode, 0, mavlink_system.state);
+	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, mavlink_system.type, mavlink_system.nav_mode, mavlink_system.mode, 0, mavlink_system.state);
 
 	chSysLock();
 	if (chVTIsArmedI(&vt1))
