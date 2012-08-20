@@ -9,7 +9,6 @@
 #include "hal.h"
 
 #include "GPS.h"
-#include "TinyGPS.h"
 
 Mailbox GPSmb;
 msg_t GPSMessage[GPS_MAILBOX_SIZE];
@@ -34,12 +33,12 @@ static msg_t GPS(void *arg){
 	while (TRUE){
 		// Read a byte off the GPS
 		uint8_t c = chnGetTimeout((BaseChannel *)&SD1, TIME_INFINITE);
-		if (TinyGPS_encode(c)){
+		/*if (TinyGPS_encode(c)){
       		palSetPad(GPIOD, GPIOD_LED5); // red
 
       		// Post a message
       		chMBPost(&GPSmb, msg, TIME_IMMEDIATE);
-		}
+		}*/
 	}
 	return 0;
 }

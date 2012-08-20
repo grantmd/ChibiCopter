@@ -16,7 +16,6 @@
 #include "Gyro.h"
 #include "Spektrum.h"
 #include "Motors.h"
-#include "TinyGPS.h"
 #include "GPS.h"
 
 #include <mavlink.h>
@@ -196,13 +195,6 @@ int main(void){
 			if (frameCounter % 20 == 0){
 				// GPS data is read in a separate thread, and here we assume it is ready and we can use it
 				// My GPS advertises a 5hz rate, so that's how often we send it back over mavlink
-				TinyGPS_get_position((int32_t*)latitude, (int32_t*)longitude, (uint32_t*)fixAge);
-				altitude = TinyGPS_altitude()*10;
-				velocity = TinyGPS_f_speed_mps()*100;
-				cog = TinyGPS_f_course()*100;
-
-				gpsFixType = 0;
-				if (fixAge != GPS_INVALID_AGE) gpsFixType = 3;
 
 				CommsSendGPSRaw(ST2MS(currentTime - startTime), gpsFixType, latitude, longitude, altitude, 65535, 65535, velocity, cog, 255);
 			}
