@@ -155,6 +155,6 @@ void CommsSendGPSRaw(uint64_t time_usec, uint8_t fix_type, int32_t lat, int32_t 
  */
 inline void comms_send_bytes(mavlink_channel_t chan, const uint8_t *buf, uint16_t len){
 	if (chan == MAVLINK_COMM_0){
-		chnWriteTimeout(&SD2, buf, len, TIME_INFINITE);
+		//chnWriteTimeout(&SD2, buf, len, TIME_INFINITE);
 	}
 }
