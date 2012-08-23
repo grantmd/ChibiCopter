@@ -216,11 +216,13 @@ void _GPSParseTerm(void){
 				case 1: // UTC
 					break;
 				case 2: // Latitude
+					gps_working_data.lat = _parseLatLonTerm();
 					break;
 				case 3: // N or S (North or South)
 					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 4: // Longitude
+					gps_working_data.lon = _parseLatLonTerm();
 					break;
 				case 5: // E or W (East or West)
 					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
@@ -261,11 +263,13 @@ void _GPSParseTerm(void){
 					gps_working_data.dataGood = (strncmp(gps_state.term, "A", 1) == 0) ? 1 : 0;
 					break;
 				case 3: // Latitude
+					gps_working_data.lat = _parseLatLonTerm();
 					break;
 				case 4: // N or S (North or South)
 					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 5: // Longitude
+					gps_working_data.lon = _parseLatLonTerm();
 					break;
 				case 6: // E or W (East or West)
 					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
@@ -292,11 +296,13 @@ void _GPSParseTerm(void){
 		case GPS_SENTENCE_GPGLL:
 			switch (gps_state.sentence_offset){
 				case 1: // Latitude
+					gps_working_data.lat = _parseLatLonTerm();
 					break;
 				case 2: // N or S (North or South)
 					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 3: // Longitude
+					gps_working_data.lon = _parseLatLonTerm();
 					break;
 				case 4: // E or W (East or West)
 					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
@@ -410,6 +416,15 @@ void _GPSParseTerm(void){
 		default:
 			break;
 	}
+}
+
+/*
+ * Special logic for parsing lat/lon terms
+ */
+
+int32_t _parseLatLonTerm(void){
+	int32_t ret;
+	return ret;
 }
 
 /*

@@ -78,6 +78,7 @@ unsigned long getHdop(void); // horizontal dilution of precision in 100ths
 
 // Private functions
 void _GPSParseTerm(void);
+int32_t _parseLatLonTerm(void);
 void _GPSParseSentence(void);
 
 #endif /* _GPS_H_ */
