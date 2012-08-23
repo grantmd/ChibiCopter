@@ -6,6 +6,7 @@
 */
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "ch.h"
 #include "hal.h"
@@ -170,7 +171,7 @@ char GPSParseChar(char c){
 
 		default:
 			// Regular data
-			gps_state.term[gps_state.term_offset++] = c;
+			if (gps_state.term_offset < sizeof(gps_state.term)-1) gps_state.term[gps_state.term_offset++] = c;
 			break;
 	}
 
@@ -205,6 +206,9 @@ void _GPSParseTerm(void){
 		return;
 	}
 
+	// Null-terminate the term
+	if (gps_state.term_offset < sizeof(gps_state.term)) gps_state.term[gps_state.term_offset] = '\0';
+
 	// Other terms vary depending on sentence type
 	switch (gps_state.sentence_type){
 		case GPS_SENTENCE_GPGGA:
@@ -226,16 +230,19 @@ void _GPSParseTerm(void){
 					if (strncmp(gps_state.term, "0", 1) == 0) gps_working_data.fixType = 0;
 					break;
 				case 7: // Number of satellites in view
+					gps_working_satellites.numVisible = atoi(gps_state.term);
 					break;
 				case 8: // Horizontal Dilution of precision (meters)
 					break;
 				case 9: // Antenna Altitude above/below mean-sea-level (geoid) (in meters)
 					break;
 				case 10: // Units of antenna altitude, meters
+					// Ignored, always M
 					break;
 				case 11: // Geoidal separation
 					break;
 				case 12: // Units of geoidal separation, meters
+					// Ignored, always M
 					break;
 				case 13: // Age of differential GPS data
 					break;
@@ -270,8 +277,10 @@ void _GPSParseTerm(void){
 				case 9: // Date, ddmmyy
 					break;
 				case 10: // Magnetic Variation, degrees
+					// I don't appear to have this on my GPS
 					break;
 				case 11: // E or W
+					// I don't appear to have this on my GPS
 					break;
 				case 12: // FAA mode indicator (NMEA 2.3 and later)
 					break;
@@ -313,28 +322,40 @@ void _GPSParseTerm(void){
 					gps_working_data.fixType = gps_state.term[0];
 					break;
 				case 3: // ID of 1st satellite used for fix
+					gps_working_satellites.prn[0] = atoi(gps_state.term);
 					break;
 				case 4: // ID of 2nd satellite used for fix
+					gps_working_satellites.prn[1] = atoi(gps_state.term);
 					break;
 				case 5: // ID of 3rd satellite used for fix
+					gps_working_satellites.prn[2] = atoi(gps_state.term);
 					break;
 				case 6: // ID of 4th satellite used for fix
+					gps_working_satellites.prn[3] = atoi(gps_state.term);
 					break;
 				case 7: // ID of 5th satellite used for fix
+					gps_working_satellites.prn[4] = atoi(gps_state.term);
 					break;
 				case 8: // ID of 6th satellite used for fix
+					gps_working_satellites.prn[5] = atoi(gps_state.term);
 					break;
 				case 9: // ID of 7th satellite used for fix
+					gps_working_satellites.prn[6] = atoi(gps_state.term);
 					break;
 				case 10: // ID of 8th satellite used for fix
+					gps_working_satellites.prn[7] = atoi(gps_state.term);
 					break;
 				case 11: // ID of 9th satellite used for fix
+					gps_working_satellites.prn[8] = atoi(gps_state.term);
 					break;
 				case 12: // ID of 10th satellite used for fix
+					gps_working_satellites.prn[9] = atoi(gps_state.term);
 					break;
 				case 13: // ID of 11th satellite used for fix
+					gps_working_satellites.prn[10] = atoi(gps_state.term);
 					break;
 				case 14: // ID of 12th satellite used for fix
+					gps_working_satellites.prn[11] = atoi(gps_state.term);
 					break;
 				case 15: // PDOP
 					break;
@@ -361,18 +382,22 @@ void _GPSParseTerm(void){
 				case 1: // Track Degrees
 					break;
 				case 2: // T = True
+					// Ignored, always T
 					break;
 				case 3: // Track Degrees
 					break;
 				case 4: // M = Magnetic
+					// Ignored, always M
 					break;
 				case 5: // Speed Knots
 					break;
 				case 6: // N = Knots
+					// Ignored, always N
 					break;
 				case 7: // Speed Kilometers Per Hour
 					break;
 				case 8: // K = Kilometers Per Hour
+					// Ignored, always K
 					break;
 				case 9: // FAA mode indicator (NMEA 2.3 and later)
 					break;

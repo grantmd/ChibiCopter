@@ -54,10 +54,10 @@ typedef struct {
 // A struct to hold satellite data
 typedef struct {
 	uint8_t numVisible; // Number of satellites visible
-	uint8_t prn[20]; // Global satellite ID
-	uint8_t elevation[20]; // Elevation (0: right on top of receiver, 90: on the horizon) of satellite
-	uint8_t azimuth[20]; // Direction of satellite, 0: 0 deg, 255: 360 deg.
-	uint8_t snr[20]; // Signal to noise ratio of satellite
+	uint8_t prn[12]; // Global satellite ID
+	uint8_t elevation[12]; // Elevation (0: right on top of receiver, 90: on the horizon) of satellite
+	uint8_t azimuth[12]; // Direction of satellite, 0: 0 deg, 255: 360 deg.
+	uint8_t snr[12]; // Signal to noise ratio of satellite
 	Mutex mtx;
 } gps_satellites_t;
 
