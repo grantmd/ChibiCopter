@@ -39,7 +39,8 @@ typedef struct {
 
 // A struct to hold our decoded gps data
 typedef struct {
-	uint8_t hasFix;
+	uint8_t fixType;
+	uint8_t dataGood;
 	int32_t lat;
 	int32_t lon;
 	int32_t alt;
@@ -52,11 +53,11 @@ typedef struct {
 
 // A struct to hold satellite data
 typedef struct {
-	uint8_t numVisible; ///< Number of satellites visible
-	uint8_t prn[20]; ///< Global satellite ID
-	uint8_t elevation[20]; ///< Elevation (0: right on top of receiver, 90: on the horizon) of satellite
-	uint8_t azimuth[20]; ///< Direction of satellite, 0: 0 deg, 255: 360 deg.
-	uint8_t snr[20]; ///< Signal to noise ratio of satellite
+	uint8_t numVisible; // Number of satellites visible
+	uint8_t prn[20]; // Global satellite ID
+	uint8_t elevation[20]; // Elevation (0: right on top of receiver, 90: on the horizon) of satellite
+	uint8_t azimuth[20]; // Direction of satellite, 0: 0 deg, 255: 360 deg.
+	uint8_t snr[20]; // Signal to noise ratio of satellite
 	Mutex mtx;
 } gps_satellites_t;
 
@@ -65,7 +66,7 @@ void GPSInit(void);
 void GPSParserInit(void);
 char GPSParseChar(char);
 
-uint8_t hasFix(void);
+uint8_t fixType(void);
 int32_t getLatitude(void); // lat in hundred thousandths of a degree
 int32_t getLongitude(void); // long in hundred thousandths of a degree
 

@@ -65,12 +65,12 @@ void GPSInit(void){
  * Public functions for accessing our parsed and validated results in a thread-safe manner
  */
 
-uint8_t hasFix(void){
+uint8_t fixType(void){
 	chMtxLock(&gps_data.mtx);
-	uint8_t hasFix = gps_data.hasFix;
+	uint8_t fixType = gps_data.fixType;
 	chMtxUnlock();
 
-	return hasFix;
+	return fixType;
 }
 
 int32_t getLatitude(void){
@@ -214,12 +214,16 @@ void _GPSParseTerm(void){
 				case 2: // Latitude
 					break;
 				case 3: // N or S (North or South)
+					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 4: // Longitude
 					break;
 				case 5: // E or W (East or West)
+					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
 					break;
 				case 6: // GPS Quality Indicator (fix type)
+					gps_working_data.dataGood = (strncmp(gps_state.term, "0", 1) > 0) ? 1 : 0;
+					if (strncmp(gps_state.term, "0", 1) == 0) gps_working_data.fixType = 0;
 					break;
 				case 7: // Number of satellites in view
 					break;
@@ -247,14 +251,17 @@ void _GPSParseTerm(void){
 				case 1: // UTC
 					break;
 				case 2: // Status, V=Navigation receiver warning A=Valid
+					gps_working_data.dataGood = (strncmp(gps_state.term, "A", 1) == 0) ? 1 : 0;
 					break;
 				case 3: // Latitude
 					break;
 				case 4: // N or S (North or South)
+					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 5: // Longitude
 					break;
 				case 6: // E or W (East or West)
+					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
 					break;
 				case 7: // Speed over ground, knots
 					break;
@@ -278,14 +285,17 @@ void _GPSParseTerm(void){
 				case 1: // Latitude
 					break;
 				case 2: // N or S (North or South)
+					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 3: // Longitude
 					break;
 				case 4: // E or W (East or West)
+					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
 					break;
 				case 5: // UTC
 					break;
 				case 6: // Status A - Data Valid, V - Data Invalid
+					gps_working_data.dataGood = (strncmp(gps_state.term, "A", 1) == 0) ? 1 : 0;
 					break;
 				case 7: // FAA mode indicator (NMEA 2.3 and later)
 					break;
@@ -299,6 +309,8 @@ void _GPSParseTerm(void){
 				case 1: // Selection mode: M=Manual, forced to operate in 2D or 3D, A=Automatic, 3D/2D
 					break;
 				case 2: // Mode (1 = no fix, 2 = 2D fix, 3 = 3D fix)
+					gps_working_data.dataGood = (strncmp(gps_state.term, "0", 1) > 0) ? 1 : 0;
+					gps_working_data.fixType = gps_state.term[0];
 					break;
 				case 3: // ID of 1st satellite used for fix
 					break;
