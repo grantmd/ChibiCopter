@@ -216,13 +216,13 @@ void _GPSParseTerm(void){
 				case 1: // UTC
 					break;
 				case 2: // Latitude
-					gps_working_data.lat = _parseLatLonTerm();
+					gps_working_data.lat = _GPSParseLatLonTerm();
 					break;
 				case 3: // N or S (North or South)
 					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 4: // Longitude
-					gps_working_data.lon = _parseLatLonTerm();
+					gps_working_data.lon = _GPSParseLatLonTerm();
 					break;
 				case 5: // E or W (East or West)
 					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
@@ -263,13 +263,13 @@ void _GPSParseTerm(void){
 					gps_working_data.dataGood = (strncmp(gps_state.term, "A", 1) == 0) ? 1 : 0;
 					break;
 				case 3: // Latitude
-					gps_working_data.lat = _parseLatLonTerm();
+					gps_working_data.lat = _GPSParseLatLonTerm();
 					break;
 				case 4: // N or S (North or South)
 					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 5: // Longitude
-					gps_working_data.lon = _parseLatLonTerm();
+					gps_working_data.lon = _GPSParseLatLonTerm();
 					break;
 				case 6: // E or W (East or West)
 					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
@@ -296,13 +296,13 @@ void _GPSParseTerm(void){
 		case GPS_SENTENCE_GPGLL:
 			switch (gps_state.sentence_offset){
 				case 1: // Latitude
-					gps_working_data.lat = _parseLatLonTerm();
+					gps_working_data.lat = _GPSParseLatLonTerm();
 					break;
 				case 2: // N or S (North or South)
 					if (strncmp(gps_state.term, "S", 1) == 0) gps_working_data.lat *= -1;
 					break;
 				case 3: // Longitude
-					gps_working_data.lon = _parseLatLonTerm();
+					gps_working_data.lon = _GPSParseLatLonTerm();
 					break;
 				case 4: // E or W (East or West)
 					if (strncmp(gps_state.term, "W", 1) == 0) gps_working_data.lon *= -1;
@@ -419,12 +419,49 @@ void _GPSParseTerm(void){
 }
 
 /*
- * Special logic for parsing lat/lon terms
+ * Special logic for parsing lat/lon terms. Takes a string like '4533.35' and return 4555583
  */
 
-int32_t _parseLatLonTerm(void){
-	int32_t ret;
+/*int32_t _GPSParseLatLonTerm(void){
+	double parsed_d = atof(gps_state.term);
+	int32_t parsed_i = atoi(gps_state.term);
+
+	double minutes = (parsed_i % 100) + (parsed_d - parsed_i);
+	int16_t degrees = parsed_i / 100;
+
+	return (degrees * 100000) + ((minutes / 6) * 10000);
+}*/
+
+int32_t _GPSParseLatLonTerm(void){
+	char *p;
+	unsigned long left = _GPSatol(gps_state.term); // Convert characters to the left of the decimal point to a number
+	unsigned long tenk_minutes = (left % 100UL) * 10000UL; // Extract the minutes (eg in 4533, the minutes are 33)
+	for (p=gps_state.term; _GPSIsDigit(*p); ++p); // Move pointer to the first non-digit
+	if (*p == '.'){ // If we found a decimal point, extract seconds
+		unsigned long mult = 1000;
+		while (_GPSIsDigit(*++p)){
+			tenk_minutes += mult * (*p - '0'); // Add the seconds after the minutes
+			mult /= 10;
+		}
+	}
+	return (left / 100) * 100000 + tenk_minutes / 6; // Extract degrees from left (45), stick it at the front, add minutes converted
+}
+
+/*
+ * Convert an array of characters to a long
+ */
+long _GPSatol(const char *str){
+	long ret = 0;
+	while (_GPSIsDigit(*str))
+		ret = 10 * ret + *str++ - '0';
 	return ret;
+}
+
+/*
+ * Is this character a digit from 0-9?
+ */
+char _GPSIsDigit(char c){
+	return c >= '0' && c <= '9';
 }
 
 /*
