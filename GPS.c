@@ -450,7 +450,7 @@ int32_t _GPSParseLatLonTerm(void){
 /*
  * Convert an array of characters to a long
  */
-long _GPSatol(const char *str){
+uint32_t _GPSatol(const char *str){
 	long ret = 0;
 	while (_GPSIsDigit(*str))
 		ret = 10 * ret + *str++ - '0';

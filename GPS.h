@@ -80,7 +80,7 @@ unsigned long getHdop(void); // horizontal dilution of precision in 100ths
 void _GPSParseTerm(void);
 int32_t _GPSParseLatLonTerm(void);
 void _GPSParseSentence(void);
-long _GPSatol(const char *);
+uint32_t _GPSatol(const char *);
 char _GPSIsDigit(char c);
 
 #endif /* _GPS_H_ */
